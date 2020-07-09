@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView} from 'react-native';
 import { Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 
 import Logo from '../assets/icons/logo.svg';
 import Header from "../components/header"
 import { NavigationScreenProp } from 'react-navigation';
-import CustomTask from "../components/costumtasks"
-
+import Smile1 from "../assets/icons/bed_smile.svg"
+import Smile2 from "../assets/icons/normal_smile.svg"
+import Smile3 from "../assets/icons/happy_smile.svg"
 import { ToDo } from "../components/toDoList"
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -25,7 +26,7 @@ export const DayReview = (): React.ReactElement => {
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
       <View style={styles.screen}>
-        <Header text='Обзор дня ' onPress={() => { onNavigateMenu() }} add={false} />
+        <Header text='Обзор дня ' onPress={() => { onNavigateMenu() }} add={false}  onHavigate={()=>{}} />
         <View style={{ width: '100%' }}>
         <View style={[styles.card, { marginTop: 7 }]} >
               <Text style={styles.titletext}>Заметки</Text>
@@ -33,13 +34,42 @@ export const DayReview = (): React.ReactElement => {
             </View>
         
         </View>
-        <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
+        <View style={{  width: '100%', alignItems: 'center',  }}>
+        <TextInput
+					style={[styles.input, {  }]}
+					multiline={true}
+					numberOfLines={5}
+				//	value={comment}
+        //	onChangeText={setComment}
+        placeholderTextColor={'#ADB1B5'}
+					placeholder={'Здесь вы можете оставить заметку'}
+				/>
+         
+        </View>
+        <View style={[styles.card, { marginTop: 7 ,}]} >
+              <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
+              <View style={styles.viewMark}>
+                <View style={{alignItems:'center'}}>
+                  <Smile1 height={27} width={31}/>
+                  <Text style={styles.textComm}>Не доволен</Text>
+                </View>
+                <View style={{alignItems:'center'}}>
+                  <Smile2 height={27} width={31}/>
+                  <Text style={styles.textComm}>Не доволен</Text>
+                </View>
+                <View style={{alignItems:'center'}}>
+                  <Smile3 height={27} width={31}/>
+                  <Text style={styles.textComm}>Не доволен</Text>
+                </View>
+              </View>
+            </View>
+        
           <Button
             style={styles.button}
           >
             <Text style={styles.buttonText}>Закончить</Text>
           </Button>
-        </View>
+       
         
       </View>
     </ScrollView>
@@ -78,7 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   screen: {
-    //alignItems: 'center',
+    alignItems: 'center',
 
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -108,4 +138,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
   },
+  input: {
+    paddingHorizontal: 17,
+   
+    backgroundColor:'#F7F8F9',
+    alignItems: 'baseline',
+     justifyContent: 'flex-start',
+      width:'90%',
+      height:130,
+      borderWidth:1,
+      borderRadius:2,
+      borderColor:'rgba(0, 0, 0, 0.04)'
+
+  },
+  viewMark:{flexDirection:'row', justifyContent:'space-between',  marginTop:24}
 });

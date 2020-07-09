@@ -58,10 +58,13 @@ export const MainTasks = (): React.ReactElement => {
   const onNAvigateReview = (): void => {
     navigation && navigation.navigate('DayReview')
   };
+  const onNAvigateAddTask = (): void => {    
+    navigation && navigation.navigate('AddTask')
+  };
   return (
     <ScrollView style={{ backgroundColor: 'white', }}>
       <View style={styles.screen}>
-        <Header text='Сегодня ' onPress={() => { onNavigateMenu() }} add={true} />
+        <Header text='Сегодня ' onPress={() => { onNavigateMenu() }} add={true} onHavigate={()=>{onNAvigateAddTask()}} />
         <View style={{ width: '100%' }}>
 
           <View style={{ backgroundColor: "#F2F3F8", }}>

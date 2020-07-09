@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 //import MenuSvg from "../assets/icons/menu_icon.svg"
 interface Props {
   onPress: () => void;
+  onHavigate :()=>void;
 add:Boolean
   text: string
 }
@@ -28,6 +29,7 @@ const Header: React.FunctionComponent<Props> = (props) => {
         </Text>
       </View>
       {props.add? <TouchableOpacity
+      onPress={props.onHavigate}
       style={{marginTop:5}}><Text style={[styles.buttonText, {  fontSize: 40 }]} >+</Text></TouchableOpacity>:null}
      
     </View>

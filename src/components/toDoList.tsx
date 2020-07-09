@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import Check from "../assets/icons/checked-radio.svg"
 interface Props {
     
 count:number,
@@ -36,7 +36,7 @@ export const  ToDo  = (props:Props): React.ReactElement => {
                           
                             </View> :
                         <View style={styles.checked}>
-                            <Text>+</Text></View>}
+                            <Check height={10}/></View>}
                 </TouchableOpacity>
     
                 <Text style={styles.textTask}>{props.count}. {props.title}</Text>

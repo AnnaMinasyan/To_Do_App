@@ -1,42 +1,49 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import SignupScreen from './SignupScreen';
 import StartScreen from './StartScreen';
 import PaidRequestScreen from './PaidRequestScreen';
 import RequestScreen from './RequestScreen';
 import ResolveProblemScreen from './ResolveProblemScreen';
-
+import { AddTask } from "../screens/addTask"
 import EndingScreen from './EndingScreen';
 import StartScreenHeader from '../components/StartScreenHeader';
 import ResolveProblemScreenHeader from '../components/ResolveProblemScreenHeader';
 import PaidRequestHeaderRight from '../components/PaidRequestHeaderRight';
-import {DayReview} from "../screens/dayReview"
+import { DayReview } from "../screens/dayReview"
+import AddTaskHeader from "../components/addTaskHeader"
 const Stack = createStackNavigator();
 
 const ScreensNavigator: React.FunctionComponent = () => (
   <Stack.Navigator initialRouteName="StartScreen">
-    
+
     <Stack.Screen
       name="StartScreen"
       component={StartScreen}
-      options={{header: StartScreenHeader, headerTransparent: true}}
+      options={{ header: StartScreenHeader, headerTransparent: true ,}}
     />
-      
-      <Stack.Screen
+
+    <Stack.Screen
       name="DayReview"
       component={DayReview}
-      options={{header: StartScreenHeader, headerTransparent: true}}
+      options={{ header: StartScreenHeader, headerTransparent: true }}
+    />
+    <Stack.Screen
+      name="AddTask"
+      component={AddTask}
+      
+      options={{headerShown:false}}
     />
     <Stack.Screen
       name="ResolveProblemScreen"
       component={ResolveProblemScreen}
-      options={{header: ResolveProblemScreenHeader}}
+      options={{ header: ResolveProblemScreenHeader }}
     />
     <Stack.Screen
       name="PaidRequestScreen"
       component={PaidRequestScreen}
-      options={({route}) => ({
+      options={({ route }) => ({
         // @ts-ignore
         title: route.params.title,
         headerTitleStyle: {
@@ -51,7 +58,7 @@ const ScreensNavigator: React.FunctionComponent = () => (
     <Stack.Screen
       name="RequestScreen"
       component={RequestScreen}
-      options={({route}) => ({
+      options={({ route }) => ({
         // @ts-ignore
         title: route.params.title,
         headerTitleStyle: {

@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const BaseHeader: React.FunctionComponent<Props> = (props) => {
+const AddTaskHeader: React.FunctionComponent<Props> = (props) => {
   const navigation = useNavigation();
 
   return (
@@ -65,10 +65,10 @@ const BaseHeader: React.FunctionComponent<Props> = (props) => {
       <View style={{flexDirection:'row'}}>
         <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        style={{marginTop:17,}}
+        style={{marginTop:17,backgroundColor:'blue'}}
         >
          
-          <MenuSvg height={20}/>
+          
           </TouchableOpacity>
 
        
@@ -78,4 +78,4 @@ const BaseHeader: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default BaseHeader;
+export default AddTaskHeader;
