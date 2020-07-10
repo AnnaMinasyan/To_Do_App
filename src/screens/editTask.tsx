@@ -12,7 +12,6 @@ import InboxWhite from '../assets/icons/inbox_icon.svg'
 import Arrow from "../assets/icons/arrow.svg"
 import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
-import { ToDo } from "../components/toDoList"
 interface Props {
     navigation: NavigationScreenProp<any, any>;
     title: string,

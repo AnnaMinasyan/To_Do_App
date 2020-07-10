@@ -21,27 +21,27 @@ export const  ToDo  = (props:Props): React.ReactElement => {
    
      function change(res:DataTypeItem){
         changeStatus(!status)
-        getData('tasks').then((data)=>{
-            if(data!=null){
-                const array=data
-              for (let index = 0; index < array.length; index++) {
-                  const element = array[index];
-                  console.log("111",element.value,res.value,res.count );
+        // getData('tasks').then((data)=>{
+        //     if(data!=null){
+        //         const array=data
+        //       for (let index = 0; index < array.length; index++) {
+        //           const element = array[index];
+        //           console.log("111",element.value,res.value,res.count );
                   
-                  if (element.value == res.value ) {
-                          console.log('element.value');
+        //           if (element.value == res.value ) {
+        //                   console.log('element.value');
                           
-                          element.count = !res.count
-                          break
-                        }
-              }
-                  console.log("[[[[[[[[",array);
-                  storeData('tasks',array )
-                  props.valueChanged(array);
-                  }
-              console.log("rees",res);
+        //                   element.count = !res.count
+        //                   break
+        //                 }
+        //       }
+        //           console.log("[[[[[[[[",array);
+        //           storeData('tasks',array )
+                  props.valueChanged(res);
+        //           }
+        //       console.log("rees",res);
               
-        })
+        // })
         
       
         //setData(res)

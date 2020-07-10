@@ -28,28 +28,40 @@ export interface DataType {
 interface DataTypeItem {
   count: boolean,
   value: string,
-  title: string
+  title: string,
 }
 interface IState {
-  todaytasks: DataTypeItem[]
+  todaytasks: DataTypeItem[],
+  isStart:boolean
+
 }
 
 class MainTasks extends React.Component<Props, IState> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      todaytasks: []
+      todaytasks: [],
+      isStart:false
     }
     const unsubscribe = props.navigation.addListener('focus', () => {
       // do something
       this.setData()
     });
   }
+  // componentDidMount(){
+  //   this.setData()
+
+  // }
   setData = async (): Promise<void> => {
     const data = await getData('tasks')
     if (data == null) {
+      
       storeData('tasks', [])
     } else {
+      
+      if(data.length==5){
+        this.setState({isStart:true})
+      }
       this.setState({ todaytasks: data })
     }
   };
@@ -57,18 +69,21 @@ class MainTasks extends React.Component<Props, IState> {
     this.props.navigation.navigate('MenuDrawer')
   };
   onNavigateToDoTask = (): void => {
-    this.props.navigation.navigate('ToDoTask')
+    if (this.state.isStart) {
+      this.props.navigation.navigate('ToDoTask')
+    } 
+    
   };
   onNAvigateAddTask = (): void => {
     this.props.navigation.navigate('AddTask', { key: 1 })
   };
   render() {
-    console.log(",,,,", this.state.todaytasks);
+    console.log(",,,,", this.state.isStart);
 
     return (
       <ScrollView style={{ backgroundColor: 'white', }}>
         <View style={styles.screen}>
-          <Header text='Сегодня ' onPress={() => { this.onNavigateMenu }} add={true} onNavigate={() => { this.onNavigateMenu }} />
+          <Header text='Сегодня ' onPress={() => { this.onNavigateMenu }} add={!this.state.isStart} onNavigate={() => { this.onNavigateMenu }} />
           <View style={{ width: '100%' }}>
             <View style={{ backgroundColor: "#F2F3F8", }}>
               {this.state.todaytasks && this.state.todaytasks[0] ?
@@ -79,7 +94,7 @@ class MainTasks extends React.Component<Props, IState> {
                     onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[0].value, title: this.state.todaytasks[0].title, index: 0 }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                      <Text style={styles.textTask}>1.{this.state.todaytasks[0].value} </Text>
+                      <Text style={styles.textTask}>1.{this.state.todaytasks[0].title} </Text>
                     </View>
                   </TouchableOpacity>
 
@@ -92,7 +107,7 @@ class MainTasks extends React.Component<Props, IState> {
                     onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[1].value, title: this.state.todaytasks[1].title, index: 1 }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                      <Text style={styles.textTask}>2.{this.state.todaytasks[1].value} </Text>
+                      <Text style={styles.textTask}>2.{this.state.todaytasks[1].title} </Text>
                     </View>
                   </TouchableOpacity>
 
@@ -101,7 +116,7 @@ class MainTasks extends React.Component<Props, IState> {
                       onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[2].value, title: this.state.todaytasks[2].title, index: 2 }) }}
                     >
                       <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                        <Text style={styles.textTask}>3.{this.state.todaytasks[2].value} </Text>
+                        <Text style={styles.textTask}>3.{this.state.todaytasks[2].title} </Text>
                       </View></TouchableOpacity> : null}
                 </View> : null}
               {this.state.todaytasks[3] ?
@@ -112,7 +127,7 @@ class MainTasks extends React.Component<Props, IState> {
                     onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[3].value, title: this.state.todaytasks[3].title, index: 3 }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                      <Text style={styles.textTask}>4.{this.state.todaytasks[3].value} </Text>
+                      <Text style={styles.textTask}>4.{this.state.todaytasks[3].title} </Text>
                     </View>
                   </TouchableOpacity>
                   {this.state.todaytasks[4] ?
@@ -120,7 +135,7 @@ class MainTasks extends React.Component<Props, IState> {
                       onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[4].value, title: this.state.todaytasks[4].title, index: 4 }) }}
                     >
                       <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                        <Text style={styles.textTask}>5.{this.state.todaytasks[4].value} </Text>
+                        <Text style={styles.textTask}>5.{this.state.todaytasks[4].title} </Text>
                       </View></TouchableOpacity> : null}
                 </View> : null}
 
@@ -129,6 +144,7 @@ class MainTasks extends React.Component<Props, IState> {
           </View>
           <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
             <Button
+            disabled={!this.state.isStart}
               style={styles.button}
               onPress={this.onNavigateToDoTask}
             >

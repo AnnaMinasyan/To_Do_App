@@ -16,8 +16,8 @@ interface Props {
 }
 export interface DataType {
   first: DataTypeItem
-  second: Array<DataTypeItem>
-  third: Array<DataTypeItem>
+  second: DataTypeItem[]
+  third: DataTypeItem[]
 }
 // const tasks:DataType = {
 //   first: { count: true, value: "sasaawtbetabssasaawtbetabs" },
@@ -27,9 +27,10 @@ export interface DataType {
 interface DataTypeItem {
   count: boolean,
   value: string,
+  title:string
 }
 interface IState {
-  tasks:Array<DataTypeItem>
+  tasks:DataTypeItem[]
 }
 //export const ToDoTask = (): React.ReactElement => {
   class ToDoTask extends React.Component<Props,IState> {
@@ -40,59 +41,45 @@ interface IState {
       }
       const unsubscribe = props.navigation.addListener('focus', () => {
         // do something
+        console.log("+++++++++++++++++++++++++++++++++++++",this.state,);
+        
         this.setData()
       });
     }
 
-  // const [tasks, changeTasks] = useState([
-  //   { value: "", title:'', count: false, },
-  //   { count: false, value: "", title:'' },
-  //   { count: false, value: "", title:'' },
-  //   { count: false, value: "" , title:''},
-  //   { count: false, value: "", title:'' }]);
-
-   handleToDoValueChange(data: DataTypeItem): void {
-    console.log("+++++++++++++++++++++++++++++++++++++",this.state, data);
-    
-  //  const array = this.state.tasks
-    // for (let index = 0; index < array.length; index++) {
-    //   const element = array[index];
-    //   console.log("{{{{{{",data.value,element.value);
-      
-    //   if (element.value == data.value ) {
-    //     console.log('element.value',element.value,data.count);
+   handleToDoValueChange(res: DataTypeItem): void {
+    console.log("+++++++++++++++++++++++++++++++++++++",this.state,);
+    getData('tasks').then((data)=>{
+      if(data!=null){
+          const array=data
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            console.log("111",element.value,res.value,res.count );
+            
+            if (element.value == res.value ) {
+                    console.log('element.value');
+                    
+                    element.count = !res.count
+                    break
+                  }
+        }
+            console.log("[[[[[[[[",array);
+            storeData('tasks',array )
+            
+            }
+        console.log("rees",res);
         
-    //     element.count = data.count
-    //     break
-    //   }
-    // }
-   //  console.log("___________________",array[0].count);
-   //  changeTasks(array)
-    // console.log("useEffecttttttttttttttttttt",array);
-    
-   //  storeData('tasks',array )
+  })
+
   } 
   
-  // React.useEffect ( () => {
-  //  // console.log('useEffecttttttttttttttttttt');
-    
-  //  setData().then((arr)=>{
-  //   console.log();
-    
-  //  })
- 
-  // },[])
   
    setData = async (): Promise<void> => {
     const data= await getData('tasks')
-    console.log('dattaaaa',  data);
-    let arr=data
-    if(data==null){
-      console.log("dasssssssssssssssss");
-      
-      storeData('tasks',[])
-         
-        }else{
+    
+    if(data!=null){
+      console.log('dattaaaa',  data);
+
          // return data
          // changeTasks(arr)
          this.setState({tasks:data})
@@ -110,34 +97,9 @@ interface IState {
   //   navigation && navigation.navigate('DayReview')
   // };
   
-	 renderItem = (data:any): React.ReactElement => {
 	
-		console.log("_______________________________",data);
-    
-		return (
-      <View style={{ backgroundColor: "#F2F3F8", }}>
-     {data ?
-      <View style={[styles.card, { marginTop: 7 }]} >
-      <Text style={styles.titletext}>Основные задачи</Text>
-      <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
-      <ToDo valueChanged={this.handleToDoValueChange} title={data[0].value} count={data[0].count} num={1} />
-    </View>:null}
-      {/* <View style={styles.card} >
-        <Text style={styles.titletext}>Второстепенные задач</Text>
-        <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
-        <ToDo valueChanged={handleToDoValueChange} title={data[1].value} count={data[1].count} num={2} />
-        <ToDo valueChanged={handleToDoValueChange} title={data[2].value} count={data[2].count} num={3} />
-      </View>
-      <View style={styles.card} >
-        <Text style={styles.titletext}>Дополнительно</Text>
-        <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
-        <ToDo valueChanged={handleToDoValueChange} title={data[3].value} count={data[3].count} num={4} />
-        <ToDo valueChanged={handleToDoValueChange} title={data[4].value} count={data[4].count} num={5} />
-      </View> */}
-    </View>
-  )};
   render(){
-    console.log(":::",this.state.tasks);
+    console.log(":::",this.state.tasks[3]);
   return (
    
     
@@ -153,18 +115,20 @@ interface IState {
               <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
               <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[0].value} count={this.state.tasks[0].count} num={1} />
             </View>:null}
-            {/* <View style={styles.card} >
+            { this.state.tasks && this.state.tasks[1]?  <View style={styles.card} >
               <Text style={styles.titletext}>Второстепенные задач</Text>
               <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[1].value} ischecked={tasks[1].count} count={2} />
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[2].value} ischecked={tasks[2].count} count={3} />
-            </View>
-            <View style={styles.card} >
+              <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[1].title} count={this.state.tasks[1].count} num={2} />
+              { this.state.tasks && this.state.tasks[2]?
+              <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[2].title} count={this.state.tasks[2].count} num={3} />:null}
+            </View>:null}
+            { this.state.tasks && this.state.tasks[3]?  <View style={styles.card} >
               <Text style={styles.titletext}>Дополнительно</Text>
               <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[3].value} ischecked={tasks[3].count} count={4} />
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[4].value} ischecked={tasks[4].count} count={5} />
-            </View> */}
+              <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[3].title} count={this.state.tasks[3].count} num={4} />
+              { this.state.tasks && this.state.tasks[4]?
+              <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[4].title} count={this.state.tasks[4].count} num={5} />:null}
+            </View>:null}
           </View>
 
         </View>
