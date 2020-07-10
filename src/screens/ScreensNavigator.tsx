@@ -6,24 +6,31 @@ import StartScreen from './StartScreen';
 import PaidRequestScreen from './PaidRequestScreen';
 import RequestScreen from './RequestScreen';
 import ResolveProblemScreen from './ResolveProblemScreen';
-import { AddTask } from "../screens/addTask"
+import AddTask  from "../screens/addTask"
 import EndingScreen from './EndingScreen';
 import StartScreenHeader from '../components/StartScreenHeader';
 import ResolveProblemScreenHeader from '../components/ResolveProblemScreenHeader';
 import PaidRequestHeaderRight from '../components/PaidRequestHeaderRight';
 import { DayReview } from "../screens/dayReview"
 import AddTaskHeader from "../components/addTaskHeader"
+import MainTasks from './MainTasks';
+import ToDoTask from"../screens/toDoTask"
+import EditTask from "../screens/editTask"
 const Stack = createStackNavigator();
 
 const ScreensNavigator: React.FunctionComponent = () => (
-  <Stack.Navigator initialRouteName="StartScreen">
+  <Stack.Navigator initialRouteName="MainTasks">
 
     <Stack.Screen
-      name="StartScreen"
-      component={StartScreen}
+      name="MainTasks"
+      component={MainTasks}
       options={{ header: StartScreenHeader, headerTransparent: true ,}}
     />
-
+  <Stack.Screen
+      name="ToDoTask"
+      component={ToDoTask}
+      options={{ header: StartScreenHeader, headerTransparent: true ,}}
+    />
     <Stack.Screen
       name="DayReview"
       component={DayReview}
@@ -32,6 +39,12 @@ const ScreensNavigator: React.FunctionComponent = () => (
     <Stack.Screen
       name="AddTask"
       component={AddTask}
+      
+      options={{headerShown:false}}
+    />
+    <Stack.Screen
+      name="EditTask"
+      component={EditTask}
       
       options={{headerShown:false}}
     />

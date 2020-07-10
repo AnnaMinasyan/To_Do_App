@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 //import MenuSvg from "../assets/icons/menu_icon.svg"
 interface Props {
   onPress: () => void;
-  onHavigate :()=>void;
+  onNavigate :()=>void;
 add:Boolean
   text: string
 }
@@ -11,6 +13,14 @@ add:Boolean
 
 
 const Header: React.FunctionComponent<Props> = (props) => {
+  const navigation = useNavigation();
+
+  const onNavigateMenu = (): void => {
+    navigation && navigation.navigate('MenuDrawer')
+  };
+  const  onNavigateAddTask = (): void => {
+      navigation && navigation.navigate('AddTask')
+   };
   return (
 
     <View style={{
@@ -19,7 +29,7 @@ const Header: React.FunctionComponent<Props> = (props) => {
     }}>
       <View style={{flexDirection:'row'}}>
         <TouchableOpacity
-        onPress={props.onPress}
+        onPress={onNavigateMenu}
         style={{marginTop:25,}}
         >
           </TouchableOpacity>
@@ -29,7 +39,10 @@ const Header: React.FunctionComponent<Props> = (props) => {
         </Text>
       </View>
       {props.add? <TouchableOpacity
-      onPress={props.onHavigate}
+      onPress={
+        
+        onNavigateAddTask
+      }
       style={{marginTop:5}}><Text style={[styles.buttonText, {  fontSize: 40 }]} >+</Text></TouchableOpacity>:null}
      
     </View>

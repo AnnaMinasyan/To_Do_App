@@ -1,8 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {MainTasks} from './MainTasks';
+import MainTasks from './MainTasks';
 import TasksMapScreen from './tasks/TasksMap';
+import ToDoTask from"../screens/toDoTask"
 
 const Nav = createStackNavigator();
 
@@ -17,8 +18,8 @@ const StartScreen: React.FunctionComponent<Props> = () => {
         options={{headerShown: false}}
       />
       <Nav.Screen
-        name="TasksMap"
-        component={TasksMapScreen}
+        name="ToDoTask"
+        component={ToDoTask}
         options={{headerShown: false}}
       />
     </Nav.Navigator>

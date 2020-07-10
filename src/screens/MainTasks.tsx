@@ -1,102 +1,141 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
-
+import { storeData, getData } from "../api/api"
 import Logo from '../assets/icons/logo.svg';
 import Header from "../components/header"
 import { NavigationScreenProp } from 'react-navigation';
 //import CustomTask from "../components/costumtasks"
+import { AsyncStorage } from 'react-native';
 
 import { ToDo } from "../components/toDoList"
+import { Value } from 'react-native-reanimated';
 interface Props {
   navigation: NavigationScreenProp<any, any>;
+  // tasks:DataTypeItem[]
 }
 export interface DataType {
   first: DataTypeItem
-  second: Array<DataTypeItem>
-  third: Array<DataTypeItem>
+  second: DataTypeItem[]
+  third: DataTypeItem[]
 }
-const tasks:DataType = {
-  first: { count: true, value: "sasaawtbetabssasaawtbetabs" },
-  second: [{ count: false, value: "sasaawtbetabssasaawtbetabs" }, { count: false, value: "sasaawtbetabssasaawtbetabs" }],
-  third: [{ count: true, value: "sasaawtbetabssasaawtbetabs" }, { count: false, value: "sasaawtbetabssasaawtbetabs" }]
-}
+// const tasks:DataType = {
+//   first: { count: true, value: "sasaawtbetabssasaawtbetabs" },
+//   second: [{ count: false, value: "sasaawtbetabssasaawtbetabs" }, { count: false, value: "sasaawtbetabssasaawtbetabs" }],
+//   third: [{ count: true, value: "sasaawtbetabssasaawtbetabs" }, { count: false, value: "sasaawtbetabssasaawtbetabs" }]
+// }
 interface DataTypeItem {
   count: boolean,
   value: string,
+  title: string
 }
-export const MainTasks = (): React.ReactElement => {
+interface IState {
+  todaytasks: DataTypeItem[]
+}
 
-
-  const [tasks, changeTasks] = useState([
-    { count: true, value: "44444444444444444444444444" },
-    { count: false, value: "sasaawtbetabssasaawtbetabs" },
-    { count: false, value: "sasaawtbetabssasaawtbetabs" },
-    { count: true, value: "sasaawtbetabssasaawtbetabs" },
-    { count: false, value: "sasaawtbetabssasaawtbetabs" }]);
-
-  function handleToDoValueChange(data: DataTypeItem): void {
-    
-
-    const array = tasks
-    for (let index = 0; index < array.length; index++) {
-      const element = array[index];
-      if (element.value = data.value) {
-        element.count = data.count
-        
-      }
+class MainTasks extends React.Component<Props, IState> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      todaytasks: []
     }
-    changeTasks(array)
-    console.log("***********************************", tasks);
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // do something
+      this.setData()
+    });
   }
-  const navigation = useNavigation();
+  setData = async (): Promise<void> => {
+    const data = await getData('tasks')
+    if (data == null) {
+      storeData('tasks', [])
+    } else {
+      this.setState({ todaytasks: data })
+    }
+  };
+  onNavigateMenu = (): void => {
+    this.props.navigation.navigate('MenuDrawer')
+  };
+  onNavigateToDoTask = (): void => {
+    this.props.navigation.navigate('ToDoTask')
+  };
+  onNAvigateAddTask = (): void => {
+    this.props.navigation.navigate('AddTask', { key: 1 })
+  };
+  render() {
+    console.log(",,,,", this.state.todaytasks);
 
-  const onNavigateMenu = (): void => {
-    navigation && navigation.navigate('MenuDrawer')
-  };
-  const onNAvigateReview = (): void => {
-    navigation && navigation.navigate('DayReview')
-  };
-  const onNAvigateAddTask = (): void => {    
-    navigation && navigation.navigate('AddTask')
-  };
-  return (
-    <ScrollView style={{ backgroundColor: 'white', }}>
-      <View style={styles.screen}>
-        <Header text='Сегодня ' onPress={() => { onNavigateMenu() }} add={true} onHavigate={()=>{onNAvigateAddTask()}} />
-        <View style={{ width: '100%' }}>
+    return (
+      <ScrollView style={{ backgroundColor: 'white', }}>
+        <View style={styles.screen}>
+          <Header text='Сегодня ' onPress={() => { this.onNavigateMenu }} add={true} onNavigate={() => { this.onNavigateMenu }} />
+          <View style={{ width: '100%' }}>
+            <View style={{ backgroundColor: "#F2F3F8", }}>
+              {this.state.todaytasks && this.state.todaytasks[0] ?
+                <View style={[styles.card, { marginTop: 7 }]} >
+                  <Text style={styles.titletext}>Основные задачи</Text>
+                  <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
+                  <TouchableOpacity
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[0].value, title: this.state.todaytasks[0].title, index: 0 }) }}
+                  >
+                    <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                      <Text style={styles.textTask}>1.{this.state.todaytasks[0].value} </Text>
+                    </View>
+                  </TouchableOpacity>
 
-          <View style={{ backgroundColor: "#F2F3F8", }}>
-            <View style={[styles.card, { marginTop: 7 }]} >
-              <Text style={styles.titletext}>Основные задачи</Text>
-              <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[0].value} ischecked={tasks[0].count} count={1} />
+                </View> : null}
+              {this.state.todaytasks[1] ?
+                <View style={styles.card} >
+                  <Text style={styles.titletext}>Второстепенные задач</Text>
+                  <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
+                  <TouchableOpacity
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[1].value, title: this.state.todaytasks[1].title, index: 1 }) }}
+                  >
+                    <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                      <Text style={styles.textTask}>2.{this.state.todaytasks[1].value} </Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  {this.state.todaytasks[2] ?
+                    <TouchableOpacity
+                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[2].value, title: this.state.todaytasks[2].title, index: 2 }) }}
+                    >
+                      <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                        <Text style={styles.textTask}>3.{this.state.todaytasks[2].value} </Text>
+                      </View></TouchableOpacity> : null}
+                </View> : null}
+              {this.state.todaytasks[3] ?
+                <View style={styles.card} >
+                  <Text style={styles.titletext}>Дополнительно</Text>
+                  <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
+                  <TouchableOpacity
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[3].value, title: this.state.todaytasks[3].title, index: 3 }) }}
+                  >
+                    <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                      <Text style={styles.textTask}>4.{this.state.todaytasks[3].value} </Text>
+                    </View>
+                  </TouchableOpacity>
+                  {this.state.todaytasks[4] ?
+                    <TouchableOpacity
+                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[4].value, title: this.state.todaytasks[4].title, index: 4 }) }}
+                    >
+                      <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
+                        <Text style={styles.textTask}>5.{this.state.todaytasks[4].value} </Text>
+                      </View></TouchableOpacity> : null}
+                </View> : null}
+
             </View>
-            <View style={styles.card} >
-              <Text style={styles.titletext}>Второстепенные задач</Text>
-              <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[1].value} ischecked={tasks[1].count} count={2} />
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[2].value} ischecked={tasks[2].count} count={3} />
-            </View>
-            <View style={styles.card} >
-              <Text style={styles.titletext}>Дополнительно</Text>
-              <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[3].value} ischecked={tasks[3].count} count={4} />
-              <ToDo valueChanged={handleToDoValueChange} title={tasks[4].value} ischecked={tasks[4].count} count={5} />
-            </View>
+
           </View>
-
-        </View>
-        <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
-          <Button
-            style={styles.button}
-            onPress={onNAvigateReview}
-          >
-            <Text style={styles.buttonText}>Закончить</Text>
-          </Button>
-        </View>
-        {/* <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor:'white'}}>
+          <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
+            <Button
+              style={styles.button}
+              onPress={this.onNavigateToDoTask}
+            >
+              <Text style={styles.buttonText}>Начать</Text>
+            </Button>
+          </View>
+          {/* <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor:'white'}}>
         <View style={{ height: 80, width: 80, borderColor: '#f2f2f2', borderWidth: 10, borderRadius: 50, marginTop:-30}}>
           <Button
             style={{ height: 59, width: 59, backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center', borderRadius: 50, }}
@@ -105,12 +144,13 @@ export const MainTasks = (): React.ReactElement => {
         </View>
         <Button></Button>
       </View> */}
-      </View>
-    </ScrollView>
-  );
+        </View>
+      </ScrollView>
+    );
+  }
 };
 
-
+export default MainTasks
 const styles = StyleSheet.create({
 
   titletext: {

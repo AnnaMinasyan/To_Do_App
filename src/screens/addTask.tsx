@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 
 import { Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import CalendarIcon from "../assets/icons/calendar_icon.svg";
+import { storeData, getData } from "../api/api"
 
 import Logo from '../assets/icons/logo.svg';
 import Header from "../components/header"
@@ -15,61 +16,86 @@ import { ToDo } from "../components/toDoList"
 interface Props {
     navigation: NavigationScreenProp<any, any>;
 }
-
-export const AddTask = (): React.ReactElement => {
-
-
-
-    const navigation = useNavigation();
-
-    const onNavigateMenu = (): void => {
-        navigation && navigation.navigate('MenuDrawer')
-    };
+interface IState {
+   title:string,
+   comment:string
+  }
+     
+    class AddTask extends React.Component<Props,IState> {
+      constructor(props:Props){
+        super(props)
+        this.state={
+            title:'',
+            comment:''
+        }
+      
+      }
+     addNewTask = (): void => {
+        getData('tasks').then((tasks) => {
+            const array = tasks
+            console.log("arrrraaay",array.length);
+                if(array.length<5){
+                    array.push({count: false, value: this.state.comment, title:this.state.title })
+                }
+           
+            console.log("arrrraaay",array);
+            
+            storeData('tasks', array).then(()=>{
+                this.props.navigation.goBack()
+            })
+        })
+    }
+    render(){
     return (
         <ScrollView style={{ backgroundColor: 'white' }}>
             <View style={styles.screen}>
-                <View style={{ backgroundColor: '#3F93D9', height: 61,  width: '100%', alignItems:'center',flexDirection:'row',justifyContent:'space-between', paddingHorizontal:23 }}>
-                    <View style={{flexDirection:'row'}}>
-                        <ArrowL/>
+                <View style={{ backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <ArrowL />
                         <Text style={styles.title}>Отменить</Text>
                     </View>
-                    <View style={{flexDirection:'row'}}>
-                        
-                        <Text style={styles.title}>Сохранить</Text>
-                        <Thick/>
-                    </View>
-                    
+                    <TouchableOpacity
+                        onPress={() => {this.addNewTask() }}
+                    >
+                        <View
+                            style={{ flexDirection: 'row' }}>
+
+                            <Text style={styles.title}>Сохранить</Text>
+                            <Thick />
+                        </View>
+                    </TouchableOpacity>
+
                 </View>
-                <View style={{ width: '100%', backgroundColor: '#F2F3F8',  paddingBottom:6  }}>
-                    <View style={[styles.card, { marginTop: 7,paddingTop:22 }]} >
+                <View style={{ width: '100%', backgroundColor: '#F2F3F8', paddingBottom: 6 }}>
+                    <View style={[styles.card, { marginTop: 7, paddingTop: 22 }]} >
                         <Text style={styles.titletext}>Название</Text>
-                   
-                    <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA',backgroundColor:'white' }}>
-                        <TextInput
-                            style={[styles.input, {}]}
-                            multiline={true}
-                            numberOfLines={2}
-                            //	value={comment}
-                            //	onChangeText={setComment}
-                            placeholderTextColor={'#ADB1B5'}
-                            placeholder={'Введите название'}
-                        />
-                    </View>
+
+                        <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', backgroundColor: 'white' }}>
+                            <TextInput
+                                style={[styles.input, {}]}
+                                multiline={true}
+                                numberOfLines={2}
+                                value={this.state.title}
+                                onChangeText={(r)=>{this.setState({title:r})}}
+                                placeholderTextColor={'#ADB1B5'}
+                                placeholder={'Введите название'}
+                            />
+                        </View>
                     </View>
                     <View style={[styles.card, {}]} >
                         <Text style={styles.titletext}>Описание</Text>
-                  
-                    <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', }}>
-                        <TextInput
-                            style={[styles.input, {}]}
-                            multiline={true}
-                            numberOfLines={2}
-                            //	value={comment}
-                            //	onChangeText={setComment}
-                            placeholderTextColor={'#ADB1B5'}
-                            placeholder={'Напишите что-то'}
-                        />
-                    </View>
+
+                        <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', }}>
+                            <TextInput
+                                style={[styles.input, {}]}
+                                multiline={true}
+                                numberOfLines={2}
+                                value={this.state.comment}
+                                onChangeText={(r)=>{this.setState({comment:r})}}
+                                placeholderTextColor={'#ADB1B5'}
+                                placeholder={'Напишите что-то'}
+                            />
+                        </View>
                     </View>
                 </View>
                 {/* <View style={{ width: '100%', backgroundColor: 'white', marginTop: 6, paddingBottom: 38 }}>
@@ -77,6 +103,7 @@ export const AddTask = (): React.ReactElement => {
                         <Text style={styles.titletext}>Категория</Text>
                         <TouchableOpacity
                             style={styles.selectbtn}
+                            onPress={()=>{getData('tasks')}                         }
                         >
                             <View style={styles.select}>
                             <View style={{ flexDirection: 'row' }}>
@@ -88,23 +115,25 @@ export const AddTask = (): React.ReactElement => {
                         </TouchableOpacity>
                     </View>
                 </View> */}
-              <View  style={{width:'100%', alignItems:'center', marginTop:38}}>
-              <Button style={styles.button} >
-                    <Text style={styles.buttonText}>Удалить задачу</Text>
-                </Button>
-              </View>
+                <View style={{ width: '100%', alignItems: 'center', marginTop: 38 }}>
+                    <Button
+                        onPress={() => { }}
+                        style={styles.button} >
+                        <Text style={styles.buttonText}>Удалить задачу</Text>
+                    </Button>
+                </View>
             </View>
         </ScrollView>
-    );
+    );}
 };
 
-
+export default AddTask
 const styles = StyleSheet.create({
-    title:{
-        fontSize:16,
-        color:'white',
-        fontWeight:'600',
-        marginHorizontal:10
+    title: {
+        fontSize: 16,
+        color: 'white',
+        fontWeight: '600',
+        marginHorizontal: 10
     },
     text: {
         fontSize: 14,
@@ -128,11 +157,12 @@ const styles = StyleSheet.create({
 
         elevation: 7,
     },
-    select:{
-         flexDirection: 'row', 
-    justifyContent:'space-between', 
-    marginHorizontal:20,
-    alignItems:'center' },
+    select: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 20,
+        alignItems: 'center'
+    },
     titletext: {
         fontSize: 17,
         fontWeight: "600",
@@ -145,7 +175,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: 'white',
         width: "100%",
-        paddingBottom:22,        // borderColor: '#e6e6e6',
+        paddingBottom: 22,        // borderColor: '#e6e6e6',
         // marginBottom: 5,
         paddingHorizontal: 23
     },

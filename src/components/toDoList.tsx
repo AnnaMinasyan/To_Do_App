@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Check from "../assets/icons/checked-radio.svg"
+import {storeData,getData} from "../api/api"
+
 interface Props {
     
-count:number,
+num:number,
     title: string,
-    ischecked: boolean,
+    count: boolean,
     valueChanged:any
 }
 interface DataTypeItem {
@@ -14,20 +16,88 @@ interface DataTypeItem {
   }
 
 export const  ToDo  = (props:Props): React.ReactElement => {
-    const [status, changeStatus] = useState(props.ischecked)
+    const [status, changeStatus] = useState(props.count)
 
    
-     function change(value:DataTypeItem){
+     function change(res:DataTypeItem){
         changeStatus(!status)
-        props.valueChanged(value);
+        getData('tasks').then((data)=>{
+            if(data!=null){
+                const array=data
+              for (let index = 0; index < array.length; index++) {
+                  const element = array[index];
+                  console.log("111",element.value,res.value,res.count );
+                  
+                  if (element.value == res.value ) {
+                          console.log('element.value');
+                          
+                          element.count = !res.count
+                          break
+                        }
+              }
+                  console.log("[[[[[[[[",array);
+                  storeData('tasks',array )
+                  props.valueChanged(array);
+                  }
+              console.log("rees",res);
+              
+        })
+        
+      
+        //setData(res)
+     
     }
-
+//    const setData = async (res:any): Promise<void> => {
+//         const data= await getData('tasks')
+        
+//         if(data!=null){
+//           const array=data
+//         for (let index = 0; index < array.length; index++) {
+//             const element = array[index];
+//             console.log("111",element.value,res.value,res.count );
+            
+//             if (element.value == res.value ) {
+//                     console.log('element.value');
+                    
+//                     element.count = res.count
+//                     break
+//                   }
+//         }
+//             console.log("[[[[[[[[",array);
+//             storeData('tasks',array )
+//             }
+        
+       
+//       };
+    // function handleToDoValueChange(data: DataTypeItem): void {
+    //     console.log("+++++++++++++++++++++++++++++++++++++");
+       
+      //  const array = this.state.tasks
+        // for (let index = 0; index < array.length; index++) {
+        //   const element = array[index];
+        //   console.log("{{{{{{",data.value,element.value);
+          
+        //   if (element.value == data.value ) {
+        //     console.log('element.value',element.value,data.count);
+            
+        //     element.count = data.count
+        //     break
+        //   }
+        // }
+       //  console.log("___________________",array[0].count);
+       //  changeTasks(array)
+        // console.log("useEffecttttttttttttttttttt",array);
+        
+       //  storeData('tasks',array )
+   //   } 
         return (
 
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
                 <TouchableOpacity
                 onPress={() => {
-                   change({value:props.title,count:!props.ischecked})
+                    console.log(props.count);
+                
+                  change({value:props.title,count:status})
                
                 }} 
                 >
@@ -39,7 +109,7 @@ export const  ToDo  = (props:Props): React.ReactElement => {
                             <Check height={10}/></View>}
                 </TouchableOpacity>
     
-                <Text style={styles.textTask}>{props.count}. {props.title}</Text>
+                <Text style={styles.textTask}>{props.num}. {props.title}</Text>
             </View>
     
         );
