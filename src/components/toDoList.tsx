@@ -8,7 +8,8 @@ interface Props {
 num:number,
     title: string,
     count: boolean,
-    valueChanged:any
+    valueChanged:any,
+    cancheck:boolean
 }
 interface DataTypeItem {
     count: boolean,
@@ -94,6 +95,7 @@ export const  ToDo  = (props:Props): React.ReactElement => {
 
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
                 <TouchableOpacity
+                disabled={!props.cancheck}
                 onPress={() => {
                     console.log(props.count);
                 

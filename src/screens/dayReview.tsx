@@ -2,31 +2,61 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Text, ScrollView} from 'react-native';
 import { Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import moment from "moment";
+import { storeData, getData } from "../api/api"
 
 import Logo from '../assets/icons/logo.svg';
-import Header from "../components/header"
+import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 import Smile1 from "../assets/icons/bed_smile.svg"
 import Smile2 from "../assets/icons/normal_smile.svg"
 import Smile3 from "../assets/icons/happy_smile.svg"
-import { ToDo } from "../components/toDoList"
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 
-export const DayReview = (): React.ReactElement => {
+interface IState {
+  mark: string,
+  comment: string
+}
 
+class DayReview extends React.Component<Props, IState> {
+  constructor(props: Props) {
+      super(props)
+      this.state = {
+          mark: '',
+          comment: ''
+      }
 
+  }
+//export const DayReview = (): React.ReactElement => {
+
+tinishedTask(){
+  const time = moment()
+  .utcOffset('+05:30')
+  .format('YYYY-MM-DD')
+getData(time).then((data) => {
   
-  const navigation = useNavigation();
+    data.isfinished = true
+   
+    data.review=this.state.comment
+   storeData(time, data).then(()=>{
+     this.props.navigation.navigate('MainTasks')
+   })
+  
+})
+}
+  
+ // const navigation = useNavigation();
 
-  const onNavigateMenu = (): void => {
-    navigation && navigation.navigate('MenuDrawer')
+   onNavigateMenu = (): void => {
+     this.props.navigation.navigate('MenuDrawer')
   };
+  render(){
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
       <View style={styles.screen}>
-        <Header text='Обзор дня ' onPress={() => { onNavigateMenu() }} add={false}  onHavigate={()=>{}} />
+        <Header text='Обзор дня ' onPress={() => { this.onNavigateMenu() }} add={false}  onNavigate={()=>{}} />
         <View style={{ width: '100%' }}>
         <View style={[styles.card, { marginTop: 7 }]} >
               <Text style={styles.titletext}>Заметки</Text>
@@ -40,7 +70,7 @@ export const DayReview = (): React.ReactElement => {
 					multiline={true}
 					numberOfLines={5}
 				//	value={comment}
-        //	onChangeText={setComment}
+      onChangeText={(r) => { this.setState({ comment: r }) }}
         placeholderTextColor={'#ADB1B5'}
 					placeholder={'Здесь вы можете оставить заметку'}
 				/>
@@ -65,6 +95,9 @@ export const DayReview = (): React.ReactElement => {
             </View>
         
           <Button
+          onPress={()=>{
+            this.tinishedTask()
+          }}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Закончить</Text>
@@ -73,9 +106,9 @@ export const DayReview = (): React.ReactElement => {
         
       </View>
     </ScrollView>
-  );
+  );}
 };
-
+export default DayReview;
 
 const styles = StyleSheet.create({
 

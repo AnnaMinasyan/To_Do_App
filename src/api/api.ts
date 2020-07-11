@@ -2,7 +2,7 @@ const BASE_URL='http://annaniks.com:5060/api/'
 import AsyncStorage from '@react-native-community/async-storage';
 
 export const storeData = async (key:any,value:any) => {
-    console.log("value", value);
+    console.log("value",key, value);
     
 	try {
 	  await AsyncStorage.setItem(key,  JSON.stringify(value))

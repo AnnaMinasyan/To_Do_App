@@ -3,16 +3,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import AddTask  from "./AddTask"
 import StartScreenHeader from '../components/StartScreenHeader';
-import  DayReview  from "./DayReview"
+import DayReview  from "./DayReview"
 import MainTasks from './MainTasks';
 import ToDoTask from"./ToDoTask"
 import EditTask from "./EditTask"
 const Stack = createStackNavigator();
 
-const ScreensNavigator: React.FunctionComponent = () => (
-  <Stack.Navigator initialRouteName="MainTasks">
+const HomeNavigator: React.FunctionComponent = () => (
+  <Stack.Navigator initialRouteName="ToDoTask">
 
-    <Stack.Screen
+  
+<Stack.Screen
       name="MainTasks"
       component={MainTasks}
       options={{ header: StartScreenHeader, headerTransparent: true ,}}
@@ -42,4 +43,4 @@ const ScreensNavigator: React.FunctionComponent = () => (
   </Stack.Navigator>
 );
 
-export default ScreensNavigator;
+export default HomeNavigator;

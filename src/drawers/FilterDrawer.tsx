@@ -21,7 +21,8 @@ const FilterDrawer: React.FunctionComponent<Props> = () => (
     drawerPosition="right"
     edgeWidth={0}
     // @ts-ignore
-    drawerContent={(props) => <FilterDrawerContent {...props} />}>
+ //   drawerContent={(props) => <FilterDrawerContent {...props} />}
+    >
     <Drawer.Screen name="MenuDrawer" component={MenuDrawer} />
   </Drawer.Navigator>
 );

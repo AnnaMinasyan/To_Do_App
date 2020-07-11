@@ -2,8 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import MainTasks from './MainTasks';
-import TasksMapScreen from './tasks/TasksMap';
-import ToDoTask from"../screens/toDoTask"
+import ToDoTask from"./ToDoTask"
 
 const Nav = createStackNavigator();
 

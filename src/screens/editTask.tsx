@@ -6,12 +6,14 @@ import CalendarIcon from "../assets/icons/calendar_icon.svg";
 import { storeData, getData } from "../api/api"
 
 import Logo from '../assets/icons/logo.svg';
-import Header from "../components/header"
+import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 import InboxWhite from '../assets/icons/inbox_icon.svg'
 import Arrow from "../assets/icons/arrow.svg"
 import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
+import moment from "moment";
+
 interface Props {
     navigation: NavigationScreenProp<any, any>;
     title: string,
@@ -21,7 +23,8 @@ interface Props {
 interface IState {
     title: string,
     comment: string,
-    index:number
+    index:number,
+    day:string
 }
 interface IRoute{
     key:string,
@@ -35,7 +38,8 @@ class EditTask extends React.Component<Props, IState> {
         this.state = {
             title: '',
             comment: '',
-            index:0
+            index:0,
+            day:''
         }
 
     }
@@ -66,32 +70,37 @@ class EditTask extends React.Component<Props, IState> {
         this.setState({
             title:this.props.route.params.title,
             comment:this.props.route.params.comment,
-            index:this.props.route.params.index
+            index:this.props.route.params.index,
+            day:this.props.route.params.day
         })
 
     }
     editTask = (): void => {
-        getData('tasks').then((tasks) => {
-           for (let index = 0; index < tasks.length; index++) {
+        const time=moment().utcOffset('+05:30').format('YYYY-MM-DD')
+        getData(this.props.route.params.day).then((res) => {
+           for (let index = 0; index < res.tasks.length; index++) {
             
                if (index == this.state.index) {
-                tasks[index].value=this.state.comment
-                tasks[index].title=this.state.title
+                res.tasks[index].value=this.state.comment
+                res.tasks[index].title=this.state.title
             } 
            }
-            storeData('tasks', tasks).then(() => {
+            storeData(this.props.route.params.day, res).then(() => {
                 this.props.navigation.goBack()
             })
         })
     }
     deleteTask=():void =>{
-        getData('tasks').then((tasks) => {
-            for (let index = 0; index < tasks.length; index++) {
+        const time=moment()
+        .utcOffset('+05:30')
+        .format('YYYY-MM-DD')
+        getData(this.props.route.params.day).then((data) => {
+            for (let index = 0; index < data.tasks.length; index++) {
                 if (index == this.state.index) {
-                 tasks.splice(index,1)
+                 data.tasks.splice(index,1)
              } 
             }
-             storeData('tasks', tasks).then(() => {
+             storeData(this.props.route.params.day, data).then(() => {
                  this.props.navigation.goBack()
              })
          })
@@ -103,10 +112,15 @@ class EditTask extends React.Component<Props, IState> {
             <ScrollView style={{ backgroundColor: 'white' }}>
                 <View style={styles.screen}>
                     <View style={{ backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity
+                         onPress={()=>{this.props.navigation.goBack()}}
+                         >
+                             <View style={{ flexDirection: 'row' }}>
                             <ArrowL />
                             <Text style={styles.title}>Отменить</Text>
                         </View>
+                         </TouchableOpacity>
+                        
                         <TouchableOpacity
                             onPress={() => { this.editTask() }}
                         >

@@ -4,12 +4,13 @@ import { Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { storeData, getData } from "../api/api"
 import Logo from '../assets/icons/logo.svg';
-import Header from "../components/header"
+import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 //import CustomTask from "../components/costumtasks"
 import { AsyncStorage } from 'react-native';
+import moment from "moment";
 
-import { ToDo } from "../components/toDoList"
+import { ToDo } from "../components/ToDoList"
 import { Value } from 'react-native-reanimated';
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -33,36 +34,78 @@ interface DataTypeItem {
 interface IState {
   todaytasks: DataTypeItem[],
   isStart:boolean
-
+time:any
 }
-
+interface LocalStorageSaveData {
+    tasks:DataTypeItem[],
+    review:string,
+    mark:string,
+    isfinished:boolean,
+    isStart:boolean
+}
 class MainTasks extends React.Component<Props, IState> {
   constructor(props: Props) {
     super(props)
     this.state = {
       todaytasks: [],
-      isStart:false
+      isStart:false,
+      time : moment()
+  .utcOffset('+05:30')
+  .format('YYYY-MM-DD')
     }
     const unsubscribe = props.navigation.addListener('focus', () => {
       // do something
       this.setData()
     });
   }
+  
   // componentDidMount(){
   //   this.setData()
-
   // }
   setData = async (): Promise<void> => {
-    const data = await getData('tasks')
+   
+    console.log("////////////////", typeof this.state.time);
+    
+     const data = await getData(this.state.time)
+     const localStroageSavingData:LocalStorageSaveData = {
+      mark:'',
+      review:'',
+      tasks:[],
+      isfinished:false,
+      isStart:false       
+    }
     if (data == null) {
-      
-      storeData('tasks', [])
+    
+      storeData(this.state.time, localStroageSavingData)
     } else {
-      
-      if(data.length==5){
-        this.setState({isStart:true})
+    
+      if (data.isfinished) {
+        const tim=moment().add(1,'days').utcOffset('+05:30')
+        .format('YYYY-MM-DD')
+        const tomm = await getData(tim)
+        this.setState({time:tim})
+        console.log('looooooooooooooooooooo',moment().add(1,'days').utcOffset('+05:30')
+        .format('YYYY-MM-DD'));
+        if(tomm==null){
+          storeData(tim, localStroageSavingData)
+        }else{
+          if(tomm.tasks.length==5){
+            tomm.isStart=true
+            this.setState({isStart:true})
+            storeData(tim,tomm )
+          }
+          this.setState({ todaytasks: tomm.tasks })
+        }
+        // storeData(tim, localStroageSavingData)
+      }else{
+        if(data.tasks.length==5){
+          data.isStart=true
+          this.setState({isStart:true})
+          storeData(this.state.time,data )
+        }
+        this.setState({ todaytasks: data.tasks })
       }
-      this.setState({ todaytasks: data })
+    
     }
   };
   onNavigateMenu = (): void => {
@@ -75,7 +118,9 @@ class MainTasks extends React.Component<Props, IState> {
     
   };
   onNAvigateAddTask = (): void => {
-    this.props.navigation.navigate('AddTask', { key: 1 })
+    console.log("-------------------",this.state.time);
+    
+    this.props.navigation.navigate('AddTask', { key: this.state.time })
   };
   render() {
     console.log(",,,,", this.state.isStart);
@@ -91,7 +136,7 @@ class MainTasks extends React.Component<Props, IState> {
                   <Text style={styles.titletext}>Основные задачи</Text>
                   <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
                   <TouchableOpacity
-                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[0].value, title: this.state.todaytasks[0].title, index: 0 }) }}
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[0].value, title: this.state.todaytasks[0].title, index: 0,day:this.state.time }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                       <Text style={styles.textTask}>1.{this.state.todaytasks[0].title} </Text>
@@ -104,7 +149,7 @@ class MainTasks extends React.Component<Props, IState> {
                   <Text style={styles.titletext}>Второстепенные задач</Text>
                   <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
                   <TouchableOpacity
-                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[1].value, title: this.state.todaytasks[1].title, index: 1 }) }}
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[1].value, title: this.state.todaytasks[1].title, index: 1,day:this.state.time }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                       <Text style={styles.textTask}>2.{this.state.todaytasks[1].title} </Text>
@@ -113,7 +158,7 @@ class MainTasks extends React.Component<Props, IState> {
 
                   {this.state.todaytasks[2] ?
                     <TouchableOpacity
-                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[2].value, title: this.state.todaytasks[2].title, index: 2 }) }}
+                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[2].value, title: this.state.todaytasks[2].title, index: 2,day:this.state.time }) }}
                     >
                       <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                         <Text style={styles.textTask}>3.{this.state.todaytasks[2].title} </Text>
@@ -124,7 +169,7 @@ class MainTasks extends React.Component<Props, IState> {
                   <Text style={styles.titletext}>Дополнительно</Text>
                   <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
                   <TouchableOpacity
-                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[3].value, title: this.state.todaytasks[3].title, index: 3 }) }}
+                    onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[3].value, title: this.state.todaytasks[3].title, index: 3,day:this.state.time }) }}
                   >
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                       <Text style={styles.textTask}>4.{this.state.todaytasks[3].title} </Text>
@@ -132,7 +177,7 @@ class MainTasks extends React.Component<Props, IState> {
                   </TouchableOpacity>
                   {this.state.todaytasks[4] ?
                     <TouchableOpacity
-                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[4].value, title: this.state.todaytasks[4].title, index: 4 }) }}
+                      onPress={() => { this.props.navigation.navigate('EditTask', { comment: this.state.todaytasks[4].value, title: this.state.todaytasks[4].title, index: 4,day:this.state.time}) }}
                     >
                       <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                         <Text style={styles.textTask}>5.{this.state.todaytasks[4].title} </Text>
