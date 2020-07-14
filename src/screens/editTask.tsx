@@ -13,23 +13,26 @@ import Arrow from "../assets/icons/arrow.svg"
 import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
 import moment from "moment";
+import Modal from 'react-native-modal';
+import Close from "../assets/icons/close.svg"
 
 interface Props {
     navigation: NavigationScreenProp<any, any>;
     title: string,
     comment: string,
-    route:IRoute
+    route: IRoute
 }
 interface IState {
     title: string,
     comment: string,
-    index:number,
-    day:string
+    index: number,
+    day: string,
+    isModalVisible: boolean
 }
-interface IRoute{
-    key:string,
-    name:string,
-    params:IState
+interface IRoute {
+    key: string,
+    name: string,
+    params: IState
 
 }
 class EditTask extends React.Component<Props, IState> {
@@ -38,89 +41,100 @@ class EditTask extends React.Component<Props, IState> {
         this.state = {
             title: '',
             comment: '',
-            index:0,
-            day:''
+            index: 0,
+            day: '',
+            isModalVisible: false
         }
 
     }
-    // const a = {
-    //     "navigation":
-    //     {
-    //         "addListener": [Function addListener],
-    //         "canGoBack": [Function canGoBack],
-    //         "closeDrawer": [Function anonymous],
-    //         "dangerouslyGetParent": [Function dangerouslyGetParent],
-    //         "dangerouslyGetState": [Function anonymous],
-    //         "dispatch": [Function dispatch],
-    //         "goBack": [Function anonymous],
-    //         "isFocused": [Function isFocused],
-    //         "jumpTo": [Function anonymous],
-    //         "navigate": [Function anonymous],
-    //         "openDrawer": [Function anonymous],
-    //         "pop": [Function anonymous], "popToTop": [Function anonymous],
-    //         "push": [Function anonymous], "removeListener": [Function removeListener],
-    //         "replace": [Function anonymous], "reset": [Function anonymous],
-    //         "setOptions": [Function setOptions], "setParams": [Function anonymous],
-    //         "toggleDrawer": [Function anonymous]
-    //     }, 
-    //     "route": { "key": "EditTask-hv4L6G-Toxh1ZveTGeTCh", "name": "EditTask", "params": { "comment": "Aaa", "title": "" } }
-    // }
     componentDidMount() {
         console.log("thiiss", this.props.route.params);
         this.setState({
-            title:this.props.route.params.title,
-            comment:this.props.route.params.comment,
-            index:this.props.route.params.index,
-            day:this.props.route.params.day
+            title: this.props.route.params.title,
+            comment: this.props.route.params.comment,
+            index: this.props.route.params.index,
+            day: this.props.route.params.day
         })
 
     }
     editTask = (): void => {
-        const time=moment().utcOffset('+05:30').format('YYYY-MM-DD')
+        const time = moment().utcOffset('+05:30').format('YYYY-MM-DD')
         getData(this.props.route.params.day).then((res) => {
-           for (let index = 0; index < res.tasks.length; index++) {
-            
-               if (index == this.state.index) {
-                res.tasks[index].value=this.state.comment
-                res.tasks[index].title=this.state.title
-            } 
-           }
+            for (let index = 0; index < res.tasks.length; index++) {
+
+                if (index == this.state.index) {
+                    res.tasks[index].value = this.state.comment
+                    res.tasks[index].title = this.state.title
+                }
+            }
             storeData(this.props.route.params.day, res).then(() => {
                 this.props.navigation.goBack()
             })
         })
     }
-    deleteTask=():void =>{
-        const time=moment()
-        .utcOffset('+05:30')
-        .format('YYYY-MM-DD')
+    toggleModal(value: boolean) {
+
+        this.setState({ isModalVisible: value });
+    }
+    openModal() {
+
+        return <Modal
+            onBackButtonPress={() => { this.toggleModal(false) }}
+            isVisible={this.state.isModalVisible}>
+            <View style={styles.modal}>
+                <TouchableOpacity
+                    style={{ position: 'absolute', right: 10, top: 5, }}
+                    onPress={() => { this.toggleModal(false) }}  >
+                    <View ><Close height={25} width={25} fill='#3F93D9' /></View>
+                </TouchableOpacity>
+                <View >
+                    <Text style={{fontSize:20}}>Вы хотите удалить эту задачу</Text>
+                </View>
+                <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection:'row' }}>
+                    <TouchableOpacity
+                        onPress={() => { this.toggleModal(false), this.deleteTask() }}  >
+                        <View ><Text style={{fontSize:20}}>Да</Text></View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                     
+                        onPress={() => { this.toggleModal(false) }}  >
+                        <View ><Text style={{fontSize:20}}>Нет</Text></View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    }
+    deleteTask = (): void => {
+        const time = moment()
+            .utcOffset('+05:30')
+            .format('YYYY-MM-DD')
         getData(this.props.route.params.day).then((data) => {
             for (let index = 0; index < data.tasks.length; index++) {
                 if (index == this.state.index) {
-                 data.tasks.splice(index,1)
-             } 
+                    data.tasks.splice(index, 1)
+                }
             }
-             storeData(this.props.route.params.day, data).then(() => {
-                 this.props.navigation.goBack()
-             })
-         })
+            console.log(":::::::::::", data.tasks, this.props.route.params.day);
+
+            storeData(this.props.route.params.day, data).then(() => {
+                this.props.navigation.goBack()
+            })
+        })
     }
     render() {
-      
-        
         return (
             <ScrollView style={{ backgroundColor: 'white' }}>
                 <View style={styles.screen}>
                     <View style={{ backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }}>
                         <TouchableOpacity
-                         onPress={()=>{this.props.navigation.goBack()}}
-                         >
-                             <View style={{ flexDirection: 'row' }}>
-                            <ArrowL />
-                            <Text style={styles.title}>Отменить</Text>
-                        </View>
-                         </TouchableOpacity>
-                        
+                            onPress={() => { this.props.navigation.goBack() }}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <ArrowL />
+                                <Text style={styles.title}>Отменить</Text>
+                            </View>
+                        </TouchableOpacity>
+
                         <TouchableOpacity
                             onPress={() => { this.editTask() }}
                         >
@@ -165,6 +179,7 @@ class EditTask extends React.Component<Props, IState> {
                             </View>
                         </View>
                     </View>
+                    {this.state.isModalVisible ? this.openModal() : null}
                     {/* <View style={{ width: '100%', backgroundColor: 'white', marginTop: 6, paddingBottom: 38 }}>
                     <View style={[styles.card, {}]} >
                         <Text style={styles.titletext}>Категория</Text>
@@ -184,7 +199,7 @@ class EditTask extends React.Component<Props, IState> {
                 </View> */}
                     <View style={{ width: '100%', alignItems: 'center', marginTop: 38 }}>
                         <Button
-                            onPress={() => { this.deleteTask()}}
+                            onPress={() => { this.setState({ isModalVisible: true }) }}
                             style={styles.button} >
                             <Text style={styles.buttonText}>Удалить задачу</Text>
                         </Button>
@@ -299,6 +314,15 @@ const styles = StyleSheet.create({
         //   borderRadius:2,
         //   borderColor:'rgba(0, 0, 0, 0.04)'
 
+    },
+    modal:{
+        backgroundColor: '#F2F3F8',
+        width: '100%',
+        height: 200,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        justifyContent:'center',
+        alignItems:'center'
     },
     viewMark: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 }
 });

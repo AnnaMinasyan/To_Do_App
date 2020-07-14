@@ -24,7 +24,7 @@ const MenuDrawer: React.FunctionComponent<Props> = () => {
   .format('YYYY-MM-DD');
   
   getData(time).then(res=>{
-		console.log("::::::::::::::::::::",res.isStart ,!res.isfinished );
+		//console.log("::::::::::::::::::::",res.isStart ,!res.isfinished );
 		if(res &&  res.isStart ){
       console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
       if(res.isfinished){

@@ -13,18 +13,19 @@ import InboxWhite from '../assets/icons/inbox_icon.svg'
 import Arrow from "../assets/icons/arrow.svg"
 import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
-import { ToDo } from "../components/ToDoList"
 interface Props {
     navigation: NavigationScreenProp<any, any>;
     //key:string,
-   
+
 }
 
 
 
 interface IState {
     title: string,
-    comment: string
+    comment: string,
+    checkTitle: boolean,
+    checkComment: boolean
 }
 
 class AddTask extends React.Component<Props, IState> {
@@ -32,50 +33,70 @@ class AddTask extends React.Component<Props, IState> {
         super(props)
         this.state = {
             title: '',
-            comment: ''
+            comment: '',
+            checkTitle: true,
+            checkComment: true
         }
 
     }
+    _valided() {
+        this.setState({
+            checkTitle: this.state.title.trim() != '',
+            checkComment: this.state.comment.trim() != ''
+        }, () => {
+            if (this.state.checkTitle && this.state.checkComment) {
+                this.addNewTask()
+            }
+        })
+    }
     addNewTask = (): void => {
-const time=moment()
-.utcOffset('+05:30')
-.format('YYYY-MM-DD')
+
+        const time = moment()
+            .utcOffset('+05:30')
+            .format('YYYY-MM-DD')
+
         getData(time).then((res) => {
-            if (res.isfinished) {
-                const tim=moment().add(1,'days').utcOffset('+05:30')
-                .format('YYYY-MM-DD')
+            if (res && res.isfinished) {
+                const tim = moment().add(1, 'days').utcOffset('+05:30')
+                    .format('YYYY-MM-DD')
                 getData(tim).then((tomorrow) => {
-                    if(tomorrow.tasks.length<5){
-                        tomorrow.tasks.push({count: false, value: this.state.comment, title:this.state.title })
+                    if (tomorrow.tasks.length < 5) {
+
+                        tomorrow.tasks.push({ count: false, value: this.state.comment, title: this.state.title })
                     }
-    
-                storeData(tim, tomorrow).then(()=>{
-                    this.props.navigation.goBack()
+
+                    storeData(tim, tomorrow).then(() => {
+                        this.props.navigation.goBack()
+                    })
                 })
-                })
-              
-              }else{
-                if(res.tasks.length<5){
-                    res.tasks.push({count: false, value: this.state.comment, title:this.state.title })
+
+            } else {
+                if (res.tasks.length < 5) {
+                    res.tasks.push({ count: false, value: this.state.comment, title: this.state.title })
                 }
 
-            storeData(time, res).then(()=>{
-                this.props.navigation.goBack()
-            })
-              }
+                storeData(time, res).then(() => {
+                    this.props.navigation.goBack()
+                })
+            }
         })
     }
     render() {
         return (
             <ScrollView style={{ backgroundColor: 'white' }}>
                 <View style={styles.screen}>
-                    <View style={{ backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <ArrowL />
-                            <Text style={styles.title}>Отменить</Text>
-                        </View>
+                    <View style={styles.header}>
                         <TouchableOpacity
-                            onPress={() => { this.addNewTask() }}
+                            onPress={() => { this.props.navigation.goBack() }}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <ArrowL />
+                                <Text style={styles.title}>Отменить</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => { this._valided() }}
                         >
                             <View
                                 style={{ flexDirection: 'row' }}>
@@ -90,9 +111,14 @@ const time=moment()
                         <View style={[styles.card, { marginTop: 7, paddingTop: 22 }]} >
                             <Text style={styles.titletext}>Название</Text>
 
-                            <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', backgroundColor: 'white' }}>
+                            <View style={this.state.checkTitle ? [styles.input] : [styles.validation]}>
                                 <TextInput
-                                    style={[styles.input, {}]}
+                                    onFocus={() => {
+                                        this.setState({
+                                            checkTitle: true
+                                        })
+                                    }}
+
                                     multiline={true}
                                     numberOfLines={2}
                                     value={this.state.title}
@@ -105,9 +131,13 @@ const time=moment()
                         <View style={[styles.card, {}]} >
                             <Text style={styles.titletext}>Описание</Text>
 
-                            <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', }}>
+                            <View style={this.state.checkComment ? [styles.input] : [styles.validation]}>
                                 <TextInput
-                                    style={[styles.input, {}]}
+                                    onFocus={() => {
+                                        this.setState({
+                                            checkComment: true
+                                        })
+                                    }}
                                     multiline={true}
                                     numberOfLines={2}
                                     value={this.state.comment}
@@ -135,13 +165,6 @@ const time=moment()
                         </TouchableOpacity>
                     </View>
                 </View> */}
-                    <View style={{ width: '100%', alignItems: 'center', marginTop: 38 }}>
-                        <Button
-                            onPress={() => { }}
-                            style={styles.button} >
-                            <Text style={styles.buttonText}>Удалить задачу</Text>
-                        </Button>
-                    </View>
                 </View>
             </ScrollView>
         );
@@ -241,17 +264,23 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
     },
     input: {
-        // paddingHorizontal: 17,
-
-        // backgroundColor:'#F7F8F9',
-        // alignItems: 'baseline',
-        //  justifyContent: 'flex-start',
-        //   width:'90%',
-        //   height:130,
-        //   borderWidth:1,
-        //   borderRadius:2,
-        //   borderColor:'rgba(0, 0, 0, 0.04)'
-
+        width: '100%',
+        height: 40,
+        borderBottomWidth: 1,
+        borderColor: '#ABB3BA',
+        backgroundColor: 'white'
     },
-    viewMark: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 }
+    validation: {
+        width: '100%',
+        height: 40,
+        borderBottomWidth: 1,
+        borderColor: 'red',
+        backgroundColor: 'white'
+    },
+    viewMark: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 24
+    },
+    header: { backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }
 });

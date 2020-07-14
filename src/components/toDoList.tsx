@@ -2,125 +2,118 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Check from "../assets/icons/checked-radio.svg"
 import {storeData,getData} from "../api/api"
-
+import Modal from 'react-native-modal';
+import Close from "../assets/icons/close.svg"
 interface Props {
-    
-num:number,
-    title: string,
-    count: boolean,
+    data:IData
+
     valueChanged:any,
-    cancheck:boolean
+   
+}
+interface IData{
+    title:string,
+    value:string,
+   count:boolean,
+   cancheck:boolean,
+   num:number
 }
 interface DataTypeItem {
     count: boolean,
     value: string,
   }
-
-export const  ToDo  = (props:Props): React.ReactElement => {
-    const [status, changeStatus] = useState(props.count)
-
+  interface IState {
+   status:boolean,
+   isModalVisible:number
+  }
+  //export const ToDoTask = (): React.ReactElement => {
+  class ToDo extends React.Component<Props, IState> {
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            isModalVisible:6,
+            status:false
+        }
+        
+      }
    
-     function change(res:DataTypeItem){
-        changeStatus(!status)
-        // getData('tasks').then((data)=>{
-        //     if(data!=null){
-        //         const array=data
-        //       for (let index = 0; index < array.length; index++) {
-        //           const element = array[index];
-        //           console.log("111",element.value,res.value,res.count );
-                  
-        //           if (element.value == res.value ) {
-        //                   console.log('element.value');
-                          
-        //                   element.count = !res.count
-        //                   break
-        //                 }
-        //       }
-        //           console.log("[[[[[[[[",array);
-        //           storeData('tasks',array )
-                  props.valueChanged(res);
-        //           }
-        //       console.log("rees",res);
-              
-        // })
-        
-      
-        //setData(res)
-     
+   change(res:DataTypeItem){
+      this.setState({status:!this.state.status})
+            this.props.valueChanged(res);
     }
-//    const setData = async (res:any): Promise<void> => {
-//         const data= await getData('tasks')
-        
-//         if(data!=null){
-//           const array=data
-//         for (let index = 0; index < array.length; index++) {
-//             const element = array[index];
-//             console.log("111",element.value,res.value,res.count );
-            
-//             if (element.value == res.value ) {
-//                     console.log('element.value');
-                    
-//                     element.count = res.count
-//                     break
-//                   }
-//         }
-//             console.log("[[[[[[[[",array);
-//             storeData('tasks',array )
-//             }
-        
+    toggleModal(value:number) {
+     
+        this.setState({isModalVisible:value});
+      }
+     
+    openInfoModal(){
        
-//       };
-    // function handleToDoValueChange(data: DataTypeItem): void {
-    //     console.log("+++++++++++++++++++++++++++++++++++++");
-       
-      //  const array = this.state.tasks
-        // for (let index = 0; index < array.length; index++) {
-        //   const element = array[index];
-        //   console.log("{{{{{{",data.value,element.value);
+        return <Modal
+        onBackButtonPress={()=>{this.toggleModal(6)}}
+         isVisible={this.state.isModalVisible>5?false:true}>
+             <View style={{ 
+               backgroundColor:'#F2F3F8',
+             width:'100%',
+             height:600,
+            paddingHorizontal:20,
+            borderRadius:5
+             }}>
+           <TouchableOpacity  
+           style={{position:'absolute',right:10,top:5, }}
+           onPress={()=>{this.toggleModal(6)}}  >
+               <View style={styles.closed}><Close height={50} width={50} fill='#3F93D9'/></View>
+               </TouchableOpacity>
+    
+           <View style={{marginTop:30}}>
+           <Text style={styles.titletext}>{this.props.data.title}</Text>
           
-        //   if (element.value == data.value ) {
-        //     console.log('element.value',element.value,data.count);
-            
-        //     element.count = data.count
-        //     break
-        //   }
-        // }
-       //  console.log("___________________",array[0].count);
-       //  changeTasks(array)
-        // console.log("useEffecttttttttttttttttttt",array);
-        
-       //  storeData('tasks',array )
-   //   } 
+           </View>
+    <View style={{marginTop:10, justifyContent:'center', alignItems:"center"}}>
+    <Text style={styles.textComm}>{this.props.data.value}</Text> 
+    </View>
+      
+      </View>
+        </Modal>
+      }
+      render(){
+
+    
         return (
 
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
                 <TouchableOpacity
-                disabled={!props.cancheck}
+                disabled={!this.props.data.cancheck}
                 onPress={() => {
-                    console.log(props.count);
+                    console.log(this.props.data.count);
                 
-                  change({value:props.title,count:status})
+                  this.change({value:this.props.data.title,count:this.state.status})
                
                 }} 
                 >
-                    {!status ?
+                    {!this.state.status ?
                         <View style={styles.unchecked}>
                           
                             </View> :
                         <View style={styles.checked}>
                             <Check height={10}/></View>}
                 </TouchableOpacity>
-    
-                <Text style={styles.textTask}>{props.num}. {props.title}</Text>
+                <TouchableOpacity
+                style={{width:'100%', height:20}}
+                onPress={()=>{
+                this.toggleModal(this.props.data.num-1)}}
+                >
+                <Text style={styles.textTask}>{this.props.data.num}. {this.props.data.title}</Text>
+                </TouchableOpacity>
+                {this.state.isModalVisible>5?null:this.openInfoModal()}
             </View>
     
-        );
+        );  }
     
 }
 
-
+export default ToDo;
 
 const styles = StyleSheet.create({
+    closed:{height:60, width:60, justifyContent:'center', alignItems:'center'},
     textTask: {
         fontSize: 14,
     },
@@ -151,5 +144,14 @@ const styles = StyleSheet.create({
             shadowRadius: 2.62,
             
             elevation: 2,
+        },
+        titletext:{
+            fontSize:26
+        },
+        textComm:{
+            fontSize:18,
+            color:'#8c8c8c'
         }
-});
+    },
+   
+);

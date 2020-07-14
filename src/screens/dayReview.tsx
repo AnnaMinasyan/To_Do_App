@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView} from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
-import { useNavigation } from '@react-navigation/native';
 import moment from "moment";
 import { storeData, getData } from "../api/api"
 
-import Logo from '../assets/icons/logo.svg';
+
 import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 import Smile1 from "../assets/icons/bed_smile.svg"
@@ -17,96 +16,168 @@ interface Props {
 
 interface IState {
   mark: string,
-  comment: string
-}
+  comment: string,
+  isWriteComm: boolean,
+  isChooseMarke: boolean
+  selectedEmoji:number
 
+}
+interface IMarksList {
+  title: string,
+  Icon:any,
+  selectedColor:string
+}
+const Emoji:IMarksList[] = [
+  {
+    title: 'Не доволен',
+    Icon:Smile1,
+    selectedColor:'red'
+  },
+  {
+    title: 'Нормально',
+    Icon:Smile2,
+    selectedColor:'orange'
+  },
+  {
+    title: 'Прекрасно',
+    Icon:Smile3,
+    selectedColor:'green'
+  }
+]
 class DayReview extends React.Component<Props, IState> {
   constructor(props: Props) {
-      super(props)
-      this.state = {
-          mark: '',
-          comment: ''
-      }
+    super(props)
+    this.state = {
+      mark: '',
+      comment: '',
+      isWriteComm: false,
+      isChooseMarke: false,
+      selectedEmoji:4
+    }
 
   }
-//export const DayReview = (): React.ReactElement => {
+  finishedTask() {
+    const time = moment()
+      .utcOffset('+05:30')
+      .format('YYYY-MM-DD')
+    getData(time).then((data) => {
+      data.isfinished = true
+      data.review = this.state.comment
+      storeData(time, data).then(() => {
+        this.props.navigation.navigate('MainTasks')
+      })
 
-tinishedTask(){
-  const time = moment()
-  .utcOffset('+05:30')
-  .format('YYYY-MM-DD')
-getData(time).then((data) => {
-  
-    data.isfinished = true
-   
-    data.review=this.state.comment
-   storeData(time, data).then(()=>{
-     this.props.navigation.navigate('MainTasks')
-   })
-  
-})
-}
-  
- // const navigation = useNavigation();
+    })
+  }
+  changeMark(index: number) {
+    
+    this.setState({selectedEmoji:index,
+    mark:Emoji[index].title})
+  }
+  isFinishedReview() {
+    let isfinished = true
+    if (this.state.comment == '') {
+      console.log("*************************");
 
-   onNavigateMenu = (): void => {
-     this.props.navigation.navigate('MenuDrawer')
+      isfinished = false
+      this.setState({ isWriteComm: true })
+    } else { this.setState({ isWriteComm: false }) }
+    if (this.state.mark == '') {
+      isfinished = false
+      this.setState({ isChooseMarke: false })
+    } else { this.setState({ isChooseMarke: false }) }
+    if (isfinished) {
+      this.finishedTask()
+    }
+  }
+
+  onNavigateMenu = (): void => {
+    this.props.navigation.navigate('MenuDrawer')
   };
-  render(){
-  return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
-      <View style={styles.screen}>
-        <Header text='Обзор дня ' onPress={() => { this.onNavigateMenu() }} add={false}  onNavigate={()=>{}} />
-        <View style={{ width: '100%' }}>
-        <View style={[styles.card, { marginTop: 7 }]} >
+  render() {
+    console.log("thiiissss", this.state);
+
+    return (
+      <ScrollView style={{ backgroundColor: 'white' }}>
+        <View style={styles.screen}>
+          <Header text='Обзор дня ' onPress={() => { this.onNavigateMenu() }} add={false} onNavigate={() => { }} />
+          <View style={{ width: '100%' }}>
+            <View style={[styles.card, { marginTop: 7 }]} >
               <Text style={styles.titletext}>Заметки</Text>
               <Text style={styles.textComm}>К заполнению не обязательно</Text>
             </View>
-        
-        </View>
-        <View style={{  width: '100%', alignItems: 'center',  }}>
-        <TextInput
-					style={[styles.input, {  }]}
-					multiline={true}
-					numberOfLines={5}
-				//	value={comment}
-      onChangeText={(r) => { this.setState({ comment: r }) }}
-        placeholderTextColor={'#ADB1B5'}
-					placeholder={'Здесь вы можете оставить заметку'}
-				/>
-         
-        </View>
-        <View style={[styles.card, { marginTop: 7 ,}]} >
-              <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
-              <View style={styles.viewMark}>
-                <View style={{alignItems:'center'}}>
-                  <Smile1 height={27} width={31}/>
-                  <Text style={styles.textComm}>Не доволен</Text>
-                </View>
-                <View style={{alignItems:'center'}}>
-                  <Smile2 height={27} width={31}/>
-                  <Text style={styles.textComm}>Не доволен</Text>
-                </View>
-                <View style={{alignItems:'center'}}>
-                  <Smile3 height={27} width={31}/>
-                  <Text style={styles.textComm}>Не доволен</Text>
-                </View>
-              </View>
+
+          </View>
+          <View style={styles.inputview}>
+            <TextInput
+              style={[styles.input, {}]}
+              multiline={true}
+              onChangeText={(r) => { this.setState({ comment: r }) }}
+              placeholderTextColor={this.state.isWriteComm ? 'red' : '#ADB1B5'}
+              placeholder={!this.state.isWriteComm ? 'Здесь вы можете оставить заметку' : 'Здесь вы должен оставить заметку'}
+            />
+
+          </View>
+          <View style={[styles.card, { marginTop: 7, }]} >
+            <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
+            {this.state.isChooseMarke ? <View><Text style={[styles.textComm, { color: 'red' }]}>Вам нужно оценить продуктивность</Text></View> : null}
+            <View style={styles.viewMark}>
+              {Emoji.map((data,index)=>{
+                const {Icon,title,selectedColor} = data
+                return(
+                  <TouchableOpacity
+                onPress={() => {
+                this.changeMark(index)
+                }}
+                style={{ alignItems: 'center' }}>
+                  
+              <Icon height={27} width={31} fill={index==this.state.selectedEmoji ? selectedColor: "#9DA5B7"} />
+              <Text style={styles.textComm}>{title}</Text>
+              </TouchableOpacity>
+                )
+              })}
+              {/* <TouchableOpacity
+                onPress={() => {
+                  this.changeMark(0, Mark.bed)
+                }}
+                style={{ alignItems: 'center' }}>
+
+                <Smile1 height={27} width={31} fill={!this.state.markList[0] ? "#9DA5B7" : 'red'} />
+                <Text style={styles.textComm}>Не доволен</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeMark(1, Mark.normal)
+                }}
+                style={{ alignItems: 'center' }}>
+               
+                <Text style={styles.textComm}>Нормально</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.changeMark(2, Mark.good)
+                }}
+                style={{ alignItems: 'center' }}>
+                <Smile3 height={27} width={31} fill={!this.state.markList[2] ? "#9DA5B7" : 'green'} />
+                <Text style={styles.textComm}>Прекрасно</Text>
+              </TouchableOpacity> */}
             </View>
-        
+          </View>
+
           <Button
-          onPress={()=>{
-            this.tinishedTask()
-          }}
+            onPress={() => {
+              this.isFinishedReview()
+            }}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Закончить</Text>
           </Button>
-       
-        
-      </View>
-    </ScrollView>
-  );}
+
+
+        </View>
+      </ScrollView>
+    );
+  }
 };
 export default DayReview;
 
@@ -126,7 +197,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 17,
     paddingBottom: 30,
-    
+
     // borderColor: '#e6e6e6',
     // marginBottom: 5,
     paddingHorizontal: 23
@@ -173,16 +244,32 @@ const styles = StyleSheet.create({
   },
   input: {
     paddingHorizontal: 17,
-   
-    backgroundColor:'#F7F8F9',
-    alignItems: 'baseline',
-     justifyContent: 'flex-start',
-      width:'90%',
-      height:130,
-      borderWidth:1,
-      borderRadius:2,
-      borderColor:'rgba(0, 0, 0, 0.04)'
-
+    backgroundColor: '#F7F8F9',
+    width: '90%',
   },
-  viewMark:{flexDirection:'row', justifyContent:'space-between',  marginTop:24}
+  viewMark: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 24
+  },
+  inputview: {
+    width: '90%',
+    alignItems: 'center',
+    height: 130,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: '#F7F8F9',
+    marginHorizontal: 17
+  },
+  validedInputview: {
+    width: '90%',
+    alignItems: 'center',
+    height: 130,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: '#F7F8F9',
+    marginHorizontal: 17
+  }
 });

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView,TouchableOpacity} from 'react-native';
 import { Button, Thumbnail } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { storeData, getData } from "../api/api"
+import Modal from 'react-native-modal';
 
 import Logo from '../assets/icons/logo.svg';
 import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 //import CustomTask from "../components/costumtasks"
 import moment from "moment";
+import Close from "../assets/icons/close.svg"
 
-import { ToDo } from "../components/ToDoList"
+import  ToDo  from "../components/ToDoList"
 import { exp, concat } from 'react-native-reanimated';
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -29,7 +31,9 @@ interface IState {
   tasks: DataTypeItem[],
   isFinished: boolean,
   cancheck:boolean,
-  time:string
+  time:string,
+  isModalVisible:number,
+  hideQuetionModal:boolean
 }
 //export const ToDoTask = (): React.ReactElement => {
 class ToDoTask extends React.Component<Props, IState> {
@@ -37,11 +41,13 @@ class ToDoTask extends React.Component<Props, IState> {
     super(props)
     this.state = {
       tasks: [],
-      isFinished: false,
+      isFinished: true,
       cancheck:true,
       time:moment()
       .utcOffset('+05:30')
-      .format('YYYY-MM-DD')
+      .format('YYYY-MM-DD'),
+      isModalVisible:6,
+      hideQuetionModal:false
     }
     const unsubscribe = props.navigation.addListener('focus', () => {
       // do something
@@ -55,55 +61,51 @@ class ToDoTask extends React.Component<Props, IState> {
     const time = moment()
       .utcOffset('+05:30')
       .format('YYYY-MM-DD')
-    getData(this.state.time).then((data) => {
+    getData(time).then((data) => {
       if (data != null) {
         let finish = true
         for (let index = 0; index < data.tasks.length; index++) {
           const element = data.tasks[index];
           console.log("==================", element, res);
-
           if (element.title == res.value) {
-
-
             element.count = !res.count
             break
           }
         }
-
-
-        storeData(this.state.time, data)
+        storeData(time, data)
       }
     })
 
   }
   ckeckisfinished() {
-    const time = moment()
-      .utcOffset('+05:30')
-      .format('YYYY-MM-DD')
-      console.log("::::::::::::",this.state.time);
-      
-    getData(this.state.time).then((data) => {
-      let finish = true
-      for (let index = 0; index < data.tasks.length; index++) {
-        const element = data.tasks[index];
-        if (!element.count) {
 
-          finish = false
-          break
-        }
-      }
-      if (finish) {
-        console.log("finishshshshshhshshsh");
-
-        // data.isfinished = true
-        //  storeData(time, data).then(()=>{
-        this.props.navigation.navigate('DayReview')
-        // })
-
-      }
-
-    })
-  }
+    return <Modal
+        onBackButtonPress={() => { this.setState({hideQuetionModal:false}) }}
+        isVisible={this.state.hideQuetionModal}>
+        <View style={styles.modal}>
+            <TouchableOpacity
+                style={{ position: 'absolute', right: 10, top: 5, }}
+                onPress={() => { this.setState({hideQuetionModal:false})}}  >
+                <View ><Close height={25} width={25} fill='#3F93D9' /></View>
+            </TouchableOpacity>
+            <View >
+                <Text style={{fontSize:20}}>Ты уверен</Text>
+            </View>
+            <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection:'row' }}>
+                <TouchableOpacity
+                    onPress={() => { this.setState({hideQuetionModal:false}),this.props.navigation.navigate('DayReview') }}  >
+                    <View ><Text style={{fontSize:20}}>Да</Text></View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                 
+                    onPress={() => { this.setState({hideQuetionModal:false}) }}  >
+                    <View ><Text style={{fontSize:20}}>Нет</Text></View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    </Modal>
+}
+  
 
   setData = async (): Promise<void> => {
     const time = moment()
@@ -120,31 +122,31 @@ class ToDoTask extends React.Component<Props, IState> {
         this.setState({
           tasks: tommorowTasks.tasks,
           cancheck:false,
-          time:tim
+          time:tim,
+          isFinished:false
         })
       }else{
-        console.log("kfhslkdfjlsodkgjdskgj");
         
         this.setState({
           tasks: data.tasks,
   
         })
       }
-      // return data
-      // changeTasks(arr)
-     
 
     }
   };
+   
 
   render() {
-    console.log(":::", this.state.isFinished);
+    console.log(":::", this.state);
     return (
 
 
       <ScrollView style={{ backgroundColor: 'white', }}>
         <View style={styles.screen}>
-          <Header text='Сегодня ' onPress={() => { }} add={false} onNavigate={() => { }} />
+          <Header text={this.state.time == moment()
+            .utcOffset('+05:30')
+            .format('YYYY-MM-DD') ? 'Сегодня ' : 'Завтра'} onPress={() => { }} add={false} onNavigate={() => { }} />
           <View style={{ width: '100%' }}>
             {/* {this.renderItem(this.state.tasks)} */}
 
@@ -152,46 +154,70 @@ class ToDoTask extends React.Component<Props, IState> {
               {this.state.tasks && this.state.tasks[0] ? <View style={[styles.card, { marginTop: 7 }]}  >
                 <Text style={styles.titletext}>Основные задачи</Text>
                 <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
-                <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[0].title} count={this.state.tasks[0].count} num={1} cancheck={this.state.cancheck} />
+                
+                <ToDo valueChanged={this.handleToDoValueChange} 
+               
+                 data={{
+                   title:this.state.tasks[0].title,
+                   value:this.state.tasks[0].value,
+                  count:this.state.tasks[0].count,
+                  cancheck:this.state.cancheck,
+                  num:1
+                  }} />
+
               </View> : null}
               {this.state.tasks && this.state.tasks[1] ? <View style={styles.card} >
                 <Text style={styles.titletext}>Второстепенные задач</Text>
                 <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
-                <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[1].title} count={this.state.tasks[1].count} num={2} cancheck={this.state.cancheck} />
+                <ToDo valueChanged={this.handleToDoValueChange} data={{
+                   title:this.state.tasks[1].title,
+                   value:this.state.tasks[1].value,
+                  count:this.state.tasks[1].count,
+                  cancheck:this.state.cancheck,
+                  num:2
+                  }} />
                 {this.state.tasks && this.state.tasks[2] ?
-                  <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[2].title} count={this.state.tasks[2].count} num={3} cancheck={this.state.cancheck}/> : null}
+                  <ToDo valueChanged={this.handleToDoValueChange} data={{
+                    title:this.state.tasks[2].title,
+                    value:this.state.tasks[2].value,
+                   count:this.state.tasks[2].count,
+                   cancheck:this.state.cancheck,
+                   num:3
+                   }}/> : null}
               </View> : null}
               {this.state.tasks && this.state.tasks[3] ? <View style={styles.card} >
                 <Text style={styles.titletext}>Дополнительно</Text>
                 <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
-                <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[3].title} count={this.state.tasks[3].count} num={4}  cancheck={this.state.cancheck}/>
+                <ToDo valueChanged={this.handleToDoValueChange} data={{
+                   title:this.state.tasks[3].title,
+                   value:this.state.tasks[3].value,
+                  count:this.state.tasks[3].count,
+                  cancheck:this.state.cancheck,
+                  num:4
+                  }} />
                 {this.state.tasks && this.state.tasks[4] ?
-                  <ToDo valueChanged={this.handleToDoValueChange} title={this.state.tasks[4].title} count={this.state.tasks[4].count} num={5}  cancheck={this.state.cancheck}/> : null}
+                  <ToDo valueChanged={this.handleToDoValueChange} data={{
+                    title:this.state.tasks[4].title,
+                    value:this.state.tasks[4].value,
+                   count:this.state.tasks[4].count,
+                   cancheck:this.state.cancheck,
+                   num:5
+                   }}/> : null}
               </View> : null}
             </View>
-
+            {this.state.isModalVisible ? this.ckeckisfinished() : null}
           </View>
           <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
             <Button
               style={styles.button}
-              //disabled={!this.state.isFinished}
+              disabled={!this.state.isFinished}
               onPress={() => {
-                this.ckeckisfinished()
-                //this.props.navigation.navigate('DayReview')
+                this.setState({hideQuetionModal:true})
               }}
             >
               <Text style={styles.buttonText}>Закончить</Text>
             </Button>
           </View>
-          {/* <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor:'white'}}>
-        <View style={{ height: 80, width: 80, borderColor: '#f2f2f2', borderWidth: 10, borderRadius: 50, marginTop:-30}}>
-          <Button
-            style={{ height: 59, width: 59, backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center', borderRadius: 50, }}
-          ><Text style={{ fontSize: 35, color: 'white' }}>+</Text></Button>
-          
-        </View>
-        <Button></Button>
-      </View> */}
         </View>
       </ScrollView>
     );
@@ -260,4 +286,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
   },
+  modal:{
+    backgroundColor: '#F2F3F8',
+    width: '100%',
+    height: 200,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    justifyContent:'center',
+    alignItems:'center'
+},
 });
