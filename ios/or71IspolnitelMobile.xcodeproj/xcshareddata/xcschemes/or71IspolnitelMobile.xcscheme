@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "or71IspolnitelMobile.app"
-               BlueprintName = "or71IspolnitelMobile"
-               ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+               BuildableName = "Productivity planner.app"
+               BlueprintName = "Productivity planner"
+               ReferencedContainer = "container:Productivity planner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "or71IspolnitelMobileTests.xctest"
-               BlueprintName = "or71IspolnitelMobileTests"
-               ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+               BuildableName = "Productivity plannerTests.xctest"
+               BlueprintName = "Productivity plannerTests"
+               ReferencedContainer = "container:Productivity planner.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "or71IspolnitelMobile.app"
-            BlueprintName = "or71IspolnitelMobile"
-            ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+            BuildableName = "Productivity planner.app"
+            BlueprintName = "Productivity planner"
+            ReferencedContainer = "container:Productivity planner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "or71IspolnitelMobile.app"
-            BlueprintName = "or71IspolnitelMobile"
-            ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+            BuildableName = "Productivity planner.app"
+            BlueprintName = "Productivity planner"
+            ReferencedContainer = "container:Productivity planner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

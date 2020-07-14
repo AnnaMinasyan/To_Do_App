@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface or71IspolnitelMobileTests : XCTestCase
+@interface Productivity plannerTests : XCTestCase
 
 @end
 
-@implementation or71IspolnitelMobileTests
+@implementation Productivity plannerTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

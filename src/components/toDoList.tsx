@@ -58,9 +58,9 @@ interface DataTypeItem {
             borderRadius:5
              }}>
            <TouchableOpacity  
-           style={{position:'absolute',right:10,top:5, }}
+           style={{position:'absolute',right:5,top:5, }}
            onPress={()=>{this.toggleModal(6)}}  >
-               <View style={styles.closed}><Close height={50} width={50} fill='#3F93D9'/></View>
+               <View style={styles.closed}><Close height={25} width={25} fill='#cccccc'/></View>
                </TouchableOpacity>
     
            <View style={{marginTop:30}}>

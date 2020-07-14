@@ -72,6 +72,7 @@ class DayReview extends React.Component<Props, IState> {
   changeMark(index: number) {
     
     this.setState({selectedEmoji:index,
+    
     mark:Emoji[index].title})
   }
   isFinishedReview() {
@@ -84,7 +85,7 @@ class DayReview extends React.Component<Props, IState> {
     } else { this.setState({ isWriteComm: false }) }
     if (this.state.mark == '') {
       isfinished = false
-      this.setState({ isChooseMarke: false })
+      this.setState({ isChooseMarke: true })
     } else { this.setState({ isChooseMarke: false }) }
     if (isfinished) {
       this.finishedTask()
@@ -120,7 +121,7 @@ class DayReview extends React.Component<Props, IState> {
           </View>
           <View style={[styles.card, { marginTop: 7, }]} >
             <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
-            {this.state.isChooseMarke ? <View><Text style={[styles.textComm, { color: 'red' }]}>Вам нужно оценить продуктивность</Text></View> : null}
+            {this.state.isChooseMarke ? <View><Text style={[styles.textComm, { color: 'red' }]}>Оценка обязательнօ</Text></View> : null}
             <View style={styles.viewMark}>
               {Emoji.map((data,index)=>{
                 const {Icon,title,selectedColor} = data

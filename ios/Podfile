@@ -44,8 +44,8 @@ def flipper_post_install(installer)
   end
 end
 
-target 'or71IspolnitelMobile' do
-  # Pods for or71IspolnitelMobile
+target 'Productivity planner' do
+  # Pods for Productivity planner
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -81,7 +81,7 @@ target 'or71IspolnitelMobile' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
-  target 'or71IspolnitelMobileTests' do
+  target 'Productivity plannerTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -98,10 +98,10 @@ target 'or71IspolnitelMobile' do
   end
 end
 
-target 'or71IspolnitelMobile-tvOS' do
-  # Pods for or71IspolnitelMobile-tvOS
+target 'Productivity planner-tvOS' do
+  # Pods for Productivity planner-tvOS
 
-  target 'or71IspolnitelMobile-tvOSTests' do
+  target 'Productivity planner-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

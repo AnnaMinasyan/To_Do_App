@@ -85,20 +85,20 @@ class EditTask extends React.Component<Props, IState> {
                 <TouchableOpacity
                     style={{ position: 'absolute', right: 10, top: 5, }}
                     onPress={() => { this.toggleModal(false) }}  >
-                    <View ><Close height={25} width={25} fill='#3F93D9' /></View>
+                    <View ><Close height={20} width={20} fill='#3F93D9' /></View>
                 </TouchableOpacity>
                 <View >
-                    <Text style={{fontSize:20}}>Вы хотите удалить эту задачу</Text>
+                    <Text style={{fontSize:20}}>Bы уверены?</Text>
                 </View>
                 <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection:'row' }}>
                     <TouchableOpacity
                         onPress={() => { this.toggleModal(false), this.deleteTask() }}  >
-                        <View ><Text style={{fontSize:20}}>Да</Text></View>
+                        <View  style={{width:50, backgroundColor:'green', justifyContent:'center', alignItems:'center',padding:5, borderRadius:5}}><Text style={{fontSize:20, color:'white'}}>Да</Text></View>
                     </TouchableOpacity>
                     <TouchableOpacity
                      
                         onPress={() => { this.toggleModal(false) }}  >
-                        <View ><Text style={{fontSize:20}}>Нет</Text></View>
+                        <View style={{width:50,  backgroundColor:'red',justifyContent:'center', alignItems:'center',padding:5, borderRadius:5}}><Text style={{fontSize:20,color:'white'}}>Нет</Text></View>
                     </TouchableOpacity>
                 </View>
             </View>

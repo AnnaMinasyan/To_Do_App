@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.or71ispolnitelmobile"
+        applicationId "com.Productivity planner"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

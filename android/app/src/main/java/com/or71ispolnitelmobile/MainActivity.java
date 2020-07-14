@@ -1,4 +1,4 @@
-package com.or71ispolnitelmobile;
+package com.Productivity planner;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "or71IspolnitelMobile";
+    return "Productivity planner";
   }
 }

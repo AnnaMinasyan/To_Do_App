@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "or71IspolnitelMobile-tvOS.app"
-               BlueprintName = "or71IspolnitelMobile-tvOS"
-               ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+               BuildableName = "Productivity planner-tvOS.app"
+               BlueprintName = "Productivity planner-tvOS"
+               ReferencedContainer = "container:Productivity planner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "or71IspolnitelMobile-tvOSTests.xctest"
-               BlueprintName = "or71IspolnitelMobile-tvOSTests"
-               ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+               BuildableName = "Productivity planner-tvOSTests.xctest"
+               BlueprintName = "Productivity planner-tvOSTests"
+               ReferencedContainer = "container:Productivity planner.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "or71IspolnitelMobile-tvOS.app"
-            BlueprintName = "or71IspolnitelMobile-tvOS"
-            ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+            BuildableName = "Productivity planner-tvOS.app"
+            BlueprintName = "Productivity planner-tvOS"
+            ReferencedContainer = "container:Productivity planner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "or71IspolnitelMobile-tvOS.app"
-            BlueprintName = "or71IspolnitelMobile-tvOS"
-            ReferencedContainer = "container:or71IspolnitelMobile.xcodeproj">
+            BuildableName = "Productivity planner-tvOS.app"
+            BlueprintName = "Productivity planner-tvOS"
+            ReferencedContainer = "container:Productivity planner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

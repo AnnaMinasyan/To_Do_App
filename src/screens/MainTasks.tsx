@@ -107,17 +107,18 @@ class MainTasks extends React.Component<Props, IState> {
                 <View ><Close height={25} width={25} fill='#3F93D9' /></View>
             </TouchableOpacity>
             <View >
-                <Text style={{fontSize:20}}>Ты уверен</Text>
+                <Text style={{fontSize:20}}>Bы уверены? </Text>
             </View>
             <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection:'row' }}>
                 <TouchableOpacity
                     onPress={() => { this.setState({hideQuetionModal:false}),this.onNavigateToDoTask() }}  >
-                    <View ><Text style={{fontSize:20}}>Да</Text></View>
+                    <View style={{width:50, backgroundColor:'green', justifyContent:'center', alignItems:'center',padding:5, borderRadius:5}} >
+                      <Text style={{fontSize:20}}>Да</Text></View>
                 </TouchableOpacity>
                 <TouchableOpacity
                  
                     onPress={() => { this.setState({hideQuetionModal:false}) }}  >
-                    <View ><Text style={{fontSize:20}}>Нет</Text></View>
+                    <View style={{width:50,  backgroundColor:'red',justifyContent:'center', alignItems:'center',padding:5, borderRadius:5}}><Text style={{fontSize:20}}>Нет</Text></View>
                 </TouchableOpacity>
             </View>
         </View>
