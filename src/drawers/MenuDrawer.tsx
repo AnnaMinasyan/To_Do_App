@@ -22,27 +22,21 @@ const MenuDrawer: React.FunctionComponent<Props> = () => {
   const time = moment()
   .utcOffset('+05:30')
   .format('YYYY-MM-DD');
-  
   getData(time).then(res=>{
 		//console.log("::::::::::::::::::::",res.isStart ,!res.isfinished );
 		if(res &&  res.isStart ){
-      console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
       if(res.isfinished){
-        console.log("777777777777777777777777");
         changeIsloaning(false)
       }else{
         changeIsloaning(true)
       }
-      
 		}	
-				//setLoginIn(!!res);
 	})
   return (
     <Drawer.Navigator
       drawerStyle={styles.container}
       drawerPosition="left"
       edgeWidth={0}
-      // @ts-ignore
       drawerContent={(props) => <MenuDrawerContent {...props} />}>
       {!isstarting?<Drawer.Screen name="ScreensNavigator" component={ScreensNavigator} />:
       <Drawer.Screen name="HomeNavigator" component={HomeNavigator} />}

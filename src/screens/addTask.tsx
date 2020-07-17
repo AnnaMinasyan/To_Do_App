@@ -1,33 +1,25 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Button } from 'native-base';
-import { useNavigation } from '@react-navigation/native';
-import CalendarIcon from "../assets/icons/calendar_icon.svg";
+import React from 'react';
+import { View,
+     StyleSheet,
+      TextInput, 
+      Text, 
+      ScrollView, 
+      TouchableOpacity
+     } from 'react-native';
 import { storeData, getData } from "../api/api"
 import moment from "moment";
-
-import Logo from '../assets/icons/logo.svg';
-import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
-import InboxWhite from '../assets/icons/inbox_icon.svg'
-import Arrow from "../assets/icons/arrow.svg"
 import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
 interface Props {
     navigation: NavigationScreenProp<any, any>;
-    //key:string,
-
 }
-
-
-
 interface IState {
     title: string,
     comment: string,
     checkTitle: boolean,
     checkComment: boolean
 }
-
 class AddTask extends React.Component<Props, IState> {
     constructor(props: Props) {
         super(props)
@@ -37,44 +29,37 @@ class AddTask extends React.Component<Props, IState> {
             checkTitle: true,
             checkComment: true
         }
-
     }
     _valided() {
         this.setState({
             checkTitle: this.state.title.trim() != '',
-            checkComment: this.state.comment.trim() != ''
+          
         }, () => {
-            if (this.state.checkTitle && this.state.checkComment) {
+            if (this.state.checkTitle) {
                 this.addNewTask()
             }
         })
     }
     addNewTask = (): void => {
-
         const time = moment()
             .utcOffset('+05:30')
             .format('YYYY-MM-DD')
-
         getData(time).then((res) => {
             if (res && res.isfinished) {
                 const tim = moment().add(1, 'days').utcOffset('+05:30')
                     .format('YYYY-MM-DD')
                 getData(tim).then((tomorrow) => {
                     if (tomorrow.tasks.length < 5) {
-
                         tomorrow.tasks.push({ count: false, value: this.state.comment, title: this.state.title })
                     }
-
                     storeData(tim, tomorrow).then(() => {
                         this.props.navigation.goBack()
                     })
                 })
-
             } else {
                 if (res.tasks.length < 5) {
                     res.tasks.push({ count: false, value: this.state.comment, title: this.state.title })
                 }
-
                 storeData(time, res).then(() => {
                     this.props.navigation.goBack()
                 })
@@ -87,30 +72,24 @@ class AddTask extends React.Component<Props, IState> {
                 <View style={styles.screen}>
                     <View style={styles.header}>
                         <TouchableOpacity
-                            onPress={() => { this.props.navigation.goBack() }}
-                        >
-                            <View style={{ flexDirection: 'row' }}>
+                            onPress={() => { this.props.navigation.goBack() }}>
+                            <View style={{ flexDirection: 'row',justifyContent:'center', alignItems:'center'}}>
                                 <ArrowL />
                                 <Text style={styles.title}>Отменить</Text>
                             </View>
                         </TouchableOpacity>
-
                         <TouchableOpacity
-                            onPress={() => { this._valided() }}
-                        >
+                            onPress={() => { this._valided() }}>
                             <View
                                 style={{ flexDirection: 'row' }}>
-
                                 <Text style={styles.title}>Сохранить</Text>
                                 <Thick />
                             </View>
                         </TouchableOpacity>
-
                     </View>
                     <View style={{ width: '100%', backgroundColor: '#F2F3F8', paddingBottom: 6 }}>
                         <View style={[styles.card, { marginTop: 7, paddingTop: 22 }]} >
                             <Text style={styles.titletext}>Название</Text>
-
                             <View style={this.state.checkTitle ? [styles.input] : [styles.validation]}>
                                 <TextInput
                                     onFocus={() => {
@@ -118,7 +97,6 @@ class AddTask extends React.Component<Props, IState> {
                                             checkTitle: true
                                         })
                                     }}
-
                                     multiline={true}
                                     numberOfLines={2}
                                     value={this.state.title}
@@ -130,7 +108,6 @@ class AddTask extends React.Component<Props, IState> {
                         </View>
                         <View style={[styles.card, {}]} >
                             <Text style={styles.titletext}>Описание</Text>
-
                             <View style={this.state.checkComment ? [styles.input] : [styles.validation]}>
                                 <TextInput
                                     onFocus={() => {
@@ -209,7 +186,7 @@ const styles = StyleSheet.create({
     },
     titletext: {
         fontSize: 17,
-        fontWeight: "600",
+        fontWeight: "bold",
         color: '#363940'
     },
     checkbox: {
@@ -261,7 +238,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: '600',
-        textTransform: 'uppercase',
     },
     input: {
         width: '100%',

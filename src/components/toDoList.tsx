@@ -80,6 +80,7 @@ interface DataTypeItem {
         return (
 
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
+                
                 <TouchableOpacity
                 disabled={!this.props.data.cancheck}
                 onPress={() => {
@@ -101,7 +102,7 @@ interface DataTypeItem {
                 onPress={()=>{
                 this.toggleModal(this.props.data.num-1)}}
                 >
-                <Text style={styles.textTask}>{this.props.data.num}. {this.props.data.title}</Text>
+                <Text style={[styles.textTask,{textDecorationLine:this.state.status?'line-through':'none',}]}>{this.props.data.num}. {this.props.data.title}</Text>
                 </TouchableOpacity>
                 {this.state.isModalVisible>5?null:this.openInfoModal()}
             </View>
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
     closed:{height:60, width:60, justifyContent:'center', alignItems:'center'},
     textTask: {
         fontSize: 14,
+        color:'#50545D'
     },
     unchecked:{
         height:22,
@@ -135,15 +137,15 @@ const styles = StyleSheet.create({
             marginRight:14,
             backgroundColor:'#3F93D9',
             justifyContent:'center',
-            alignItems:'center',shadowColor: "#000",
+            alignItems:'center',
             shadowOffset: {
                 width: 0,
-                height: 2,
+                height: 4,
             },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            
-            elevation: 2,
+            shadowOpacity: 0.18,
+            shadowRadius: 8,
+            shadowColor:'rgba(70, 93, 239, 0.18)',
+            elevation: 14,
         },
         titletext:{
             fontSize:26

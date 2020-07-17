@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native';
 import { Button } from 'native-base';
 import moment from "moment";
 import { storeData, getData } from "../api/api"
-
-
 import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
 import Smile1 from "../assets/icons/bed_smile.svg"
@@ -13,35 +18,33 @@ import Smile3 from "../assets/icons/happy_smile.svg"
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
-
 interface IState {
   mark: string,
   comment: string,
   isWriteComm: boolean,
   isChooseMarke: boolean
-  selectedEmoji:number
-
+  selectedEmoji: number
 }
 interface IMarksList {
   title: string,
-  Icon:any,
-  selectedColor:string
+  Icon: any,
+  selectedColor: string
 }
-const Emoji:IMarksList[] = [
+const Emoji: IMarksList[] = [
   {
     title: 'Не доволен',
-    Icon:Smile1,
-    selectedColor:'red'
+    Icon: Smile1,
+    selectedColor: 'red'
   },
   {
     title: 'Нормально',
-    Icon:Smile2,
-    selectedColor:'orange'
+    Icon: Smile2,
+    selectedColor: 'orange'
   },
   {
     title: 'Прекрасно',
-    Icon:Smile3,
-    selectedColor:'green'
+    Icon: Smile3,
+    selectedColor: 'green'
   }
 ]
 class DayReview extends React.Component<Props, IState> {
@@ -52,7 +55,7 @@ class DayReview extends React.Component<Props, IState> {
       comment: '',
       isWriteComm: false,
       isChooseMarke: false,
-      selectedEmoji:4
+      selectedEmoji: 4
     }
 
   }
@@ -63,6 +66,7 @@ class DayReview extends React.Component<Props, IState> {
     getData(time).then((data) => {
       data.isfinished = true
       data.review = this.state.comment
+      data.mark = this.state.mark
       storeData(time, data).then(() => {
         this.props.navigation.navigate('MainTasks')
       })
@@ -70,16 +74,14 @@ class DayReview extends React.Component<Props, IState> {
     })
   }
   changeMark(index: number) {
-    
-    this.setState({selectedEmoji:index,
-    
-    mark:Emoji[index].title})
+    this.setState({
+      selectedEmoji: index,
+      mark: Emoji[index].title
+    })
   }
   isFinishedReview() {
     let isfinished = true
     if (this.state.comment == '') {
-      console.log("*************************");
-
       isfinished = false
       this.setState({ isWriteComm: true })
     } else { this.setState({ isWriteComm: false }) }
@@ -91,13 +93,10 @@ class DayReview extends React.Component<Props, IState> {
       this.finishedTask()
     }
   }
-
   onNavigateMenu = (): void => {
     this.props.navigation.navigate('MenuDrawer')
   };
   render() {
-    console.log("thiiissss", this.state);
-
     return (
       <ScrollView style={{ backgroundColor: 'white' }}>
         <View style={styles.screen}>
@@ -107,34 +106,34 @@ class DayReview extends React.Component<Props, IState> {
               <Text style={styles.titletext}>Заметки</Text>
               <Text style={styles.textComm}>К заполнению не обязательно</Text>
             </View>
-
           </View>
           <View style={styles.inputview}>
             <TextInput
+              value={this.state.comment}
               style={[styles.input, {}]}
               multiline={true}
               onChangeText={(r) => { this.setState({ comment: r }) }}
               placeholderTextColor={this.state.isWriteComm ? 'red' : '#ADB1B5'}
               placeholder={!this.state.isWriteComm ? 'Здесь вы можете оставить заметку' : 'Здесь вы должен оставить заметку'}
             />
-
           </View>
           <View style={[styles.card, { marginTop: 7, }]} >
             <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
-            {this.state.isChooseMarke ? <View><Text style={[styles.textComm, { color: 'red' }]}>Оценка обязательнօ</Text></View> : null}
+            {this.state.isChooseMarke ? <View>
+              <Text style={[styles.textComm, { color: 'red' }]}>Оценка обязательнօ</Text>
+            </View> : null}
             <View style={styles.viewMark}>
-              {Emoji.map((data,index)=>{
-                const {Icon,title,selectedColor} = data
-                return(
+              {Emoji.map((data, index) => {
+                const { Icon, title, selectedColor } = data
+                return (
                   <TouchableOpacity
-                onPress={() => {
-                this.changeMark(index)
-                }}
-                style={{ alignItems: 'center' }}>
-                  
-              <Icon height={27} width={31} fill={index==this.state.selectedEmoji ? selectedColor: "#9DA5B7"} />
-              <Text style={styles.textComm}>{title}</Text>
-              </TouchableOpacity>
+                    onPress={() => {
+                      this.changeMark(index)
+                    }}
+                    style={{ alignItems: 'center' }}>
+                    <Icon height={27} width={31} fill={index == this.state.selectedEmoji ? selectedColor : "#9DA5B7"} />
+                    <Text style={styles.textComm}>{title}</Text>
+                  </TouchableOpacity>
                 )
               })}
               {/* <TouchableOpacity
@@ -164,17 +163,13 @@ class DayReview extends React.Component<Props, IState> {
               </TouchableOpacity> */}
             </View>
           </View>
-
           <Button
             onPress={() => {
-              this.isFinishedReview()
+              this.finishedTask()
             }}
-            style={styles.button}
-          >
+            style={styles.button}>
             <Text style={styles.buttonText}>Закончить</Text>
           </Button>
-
-
         </View>
       </ScrollView>
     );
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
 
   titletext: {
     fontSize: 17,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: '#363940'
   },
   checkbox: {
@@ -241,7 +236,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   input: {
     paddingHorizontal: 17,

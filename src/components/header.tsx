@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import Icon from "../assets/icons/pluse.svg"
 //import MenuSvg from "../assets/icons/menu_icon.svg"
 interface Props {
   onPress: () => void;
@@ -43,7 +43,9 @@ const Header: React.FunctionComponent<Props> = (props) => {
         
         onNavigateAddTask
       }
-      style={{marginTop:5}}><Text style={[styles.buttonText, {  fontSize: 40 }]} >+</Text></TouchableOpacity>:null}
+      style={{marginTop:5, justifyContent:'center', alignItems:'center'}}>
+        <Icon fill="white"></Icon>
+      </TouchableOpacity>:null}
      
     </View>
 
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.8,
     color: '#fff',
-    textTransform: 'uppercase',
    marginLeft:22
   },
 });

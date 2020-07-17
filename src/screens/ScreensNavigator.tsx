@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import AddTask  from "./AddTask"
 import StartScreenHeader from '../components/StartScreenHeader';
 import  DayReview  from "./DayReview"
@@ -8,10 +7,8 @@ import MainTasks from './MainTasks';
 import ToDoTask from"./ToDoTask"
 import EditTask from "./EditTask"
 const Stack = createStackNavigator();
-
 const ScreensNavigator: React.FunctionComponent = () => (
   <Stack.Navigator initialRouteName="MainTasks">
-
     <Stack.Screen
       name="MainTasks"
       component={MainTasks}
@@ -30,13 +27,11 @@ const ScreensNavigator: React.FunctionComponent = () => (
     <Stack.Screen
       name="AddTask"
       component={AddTask}
-      
       options={{headerShown:false}}
     />
     <Stack.Screen
       name="EditTask"
-      component={EditTask}
-      
+      component={EditTask} 
       options={{headerShown:false}}
     />
   </Stack.Navigator>

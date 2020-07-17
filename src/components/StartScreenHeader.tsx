@@ -1,7 +1,6 @@
 import React from 'react';
 
 import BaseHeader from './BaseHeader';
-import TasksViewSwitcher from './TasksViewSwitcher';
 
 interface Props {
 }

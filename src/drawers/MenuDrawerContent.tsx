@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet,  Text, ScrollView, TouchableOpacity } from 'react-native';
 import Inbox from '../assets/icons/inbox_icon.svg'
 import CalendarIcon from "../assets/icons/calendar_icon.svg";
 import Week from "../assets/icons/calendar2_icon.svg";
@@ -7,13 +7,11 @@ import Mount from "../assets/icons/calendar3_icon.svg";
 import All from "../assets/icons/all_icon.svg";
 import Settings from "../assets/icons/settings_icon.svg";
 import {DrawerContentScrollView} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
 
 interface Props {}
 
 
 const MenuDrawerContent: React.FunctionComponent<Props> = (props) => {
-  const navigation = useNavigation();
 
   return (
     <DrawerContentScrollView {...props}>
@@ -26,9 +24,9 @@ const MenuDrawerContent: React.FunctionComponent<Props> = (props) => {
           <Text style={styles.text}>Входящие</Text>
           </View>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: '#F56060', }]}
+            style={[styles.button, { backgroundColor: '#F56060', padding: 5 }]}
           >
-            <Text>5</Text>
+            <Text style={{color:'white',fontSize:11}} >5</Text>
           </TouchableOpacity>
         </View>
         <View style={{ backgroundColor: '#FFFFFF', marginVertical: 5 }}>
@@ -39,9 +37,9 @@ const MenuDrawerContent: React.FunctionComponent<Props> = (props) => {
             <Text style={styles.text}>День</Text>
             </View>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: '#3F93D9', }]}
+              style={[styles.button, { backgroundColor: '#3F93D9', padding:5}]}
             >
-              <Text>4</Text>
+              <Text style={{color:'white',fontSize:11}}>4</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.top, { height: 35, }]}>
@@ -50,9 +48,9 @@ const MenuDrawerContent: React.FunctionComponent<Props> = (props) => {
             <Text style={styles.text}>Неделя</Text>
             </View>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: '#3F93D9', }]}
+              style={[styles.button, { backgroundColor: '#3F93D9', padding:5}]}
             >
-              <Text>2</Text>
+              <Text style={{color:'white',fontSize:11}}>2</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.top, { height: 35, }]}>
@@ -61,9 +59,9 @@ const MenuDrawerContent: React.FunctionComponent<Props> = (props) => {
             <Text style={styles.text}>Месяц</Text>
             </View>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: '#3F93D9', }]}
+              style={[styles.button, { backgroundColor: '#3F93D9',padding:5 }]}
             >
-              <Text>5</Text>
+              <Text style={{color:'white',fontSize:11}}>5</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.top, { height: 35, }]}>

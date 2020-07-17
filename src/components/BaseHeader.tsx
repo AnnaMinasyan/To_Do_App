@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.8,
     color: '#fff',
-    textTransform: 'uppercase',
    marginLeft:12.70
   },
 });

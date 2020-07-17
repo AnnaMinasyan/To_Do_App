@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     letterSpacing: 0.75,
     lineHeight: 19,
-    textTransform: 'uppercase',
   },
 });
 
@@ -149,7 +148,6 @@ const FilterDrawerContent: React.FunctionComponent<Props> = (props) => {
   const originCategories = [...categories];
   categories = !areAllCategories ? categories.slice(0, 3) : originCategories;
 
-  const navigation = props.navigation;
 
   return (
     <DrawerContentScrollView {...props}>
@@ -159,9 +157,9 @@ const FilterDrawerContent: React.FunctionComponent<Props> = (props) => {
             <Filter width={22} height={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Фильтр</Text>
-          <TouchableOpacity onPress={() => navigation.closeDrawer()}>
+          {/* <TouchableOpacity onPress={() => navigation.closeDrawer()}>
             <Text style={styles.closeBtn}>&#10060;</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <Form style={styles.formContainer}>

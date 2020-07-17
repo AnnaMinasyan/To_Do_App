@@ -3,7 +3,6 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {StyleSheet} from 'react-native';
 
 import MenuDrawer from './MenuDrawer';
-import FilterDrawerContent from './FilterDrawerContent';
 
 interface Props {}
 

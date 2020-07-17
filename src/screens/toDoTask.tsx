@@ -35,7 +35,6 @@ interface IState {
   isModalVisible:number,
   hideQuetionModal:boolean
 }
-//export const ToDoTask = (): React.ReactElement => {
 class ToDoTask extends React.Component<Props, IState> {
   constructor(props: Props) {
     super(props)
@@ -50,10 +49,7 @@ class ToDoTask extends React.Component<Props, IState> {
       hideQuetionModal:false
     }
     const unsubscribe = props.navigation.addListener('focus', () => {
-      // do something
-
       this.setData()
-
     });
   }
 
@@ -66,7 +62,6 @@ class ToDoTask extends React.Component<Props, IState> {
         let finish = true
         for (let index = 0; index < data.tasks.length; index++) {
           const element = data.tasks[index];
-          console.log("==================", element, res);
           if (element.title == res.value) {
             element.count = !res.count
             break
@@ -75,10 +70,8 @@ class ToDoTask extends React.Component<Props, IState> {
         storeData(time, data)
       }
     })
-
   }
   ckeckisfinished() {
-
     return <Modal
         onBackButtonPress={() => { this.setState({hideQuetionModal:false}) }}
         isVisible={this.state.hideQuetionModal}>
@@ -89,30 +82,27 @@ class ToDoTask extends React.Component<Props, IState> {
                 <View ><Close height={25} width={25} fill='#3F93D9' /></View>
             </TouchableOpacity>
             <View >
-                <Text style={{fontSize:20}}>Ты уверен</Text>
+                <Text style={{fontSize:20}}>Bы уверены?</Text>
             </View>
-            <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection:'row' }}>
-                <TouchableOpacity
-                    onPress={() => { this.setState({hideQuetionModal:false}),this.props.navigation.navigate('DayReview') }}  >
-                    <View ><Text style={{fontSize:20}}>Да</Text></View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                 
-                    onPress={() => { this.setState({hideQuetionModal:false}) }}  >
-                    <View ><Text style={{fontSize:20}}>Нет</Text></View>
-                </TouchableOpacity>
-            </View>
+            <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection: 'row' }}>
+          <TouchableOpacity
+             onPress={() => { this.setState({hideQuetionModal:false}),this.props.navigation.navigate('DayReview') }}  >
+            <View style={styles.btnYes} >
+              <Text style={{ fontSize: 16,color:'white'}}>Да</Text></View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
+            <View style={styles.btnNo}><Text style={{ fontSize: 16, color:'white'}}>Нет</Text></View>
+          </TouchableOpacity>
+        </View>
         </View>
     </Modal>
 }
-  
-
   setData = async (): Promise<void> => {
     const time = moment()
       .utcOffset('+05:30')
       .format('YYYY-MM-DD')
     const data = await getData(time)
-
     if (data != null) {
       console.log('dattaaaa', data);
       if (data.isfinished) {
@@ -126,37 +116,27 @@ class ToDoTask extends React.Component<Props, IState> {
           isFinished:false
         })
       }else{
-        
         this.setState({
           tasks: data.tasks,
-  
         })
       }
-
     }
   };
    
 
   render() {
-    console.log(":::", this.state);
     return (
-
-
       <ScrollView style={{ backgroundColor: 'white', }}>
         <View style={styles.screen}>
           <Header text={this.state.time == moment()
             .utcOffset('+05:30')
             .format('YYYY-MM-DD') ? 'Сегодня ' : 'Завтра'} onPress={() => { }} add={false} onNavigate={() => { }} />
           <View style={{ width: '100%' }}>
-            {/* {this.renderItem(this.state.tasks)} */}
-
             <View style={{ backgroundColor: "#F2F3F8", }}>
               {this.state.tasks && this.state.tasks[0] ? <View style={[styles.card, { marginTop: 7 }]}  >
                 <Text style={styles.titletext}>Основные задачи</Text>
                 <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
-                
                 <ToDo valueChanged={this.handleToDoValueChange} 
-               
                  data={{
                    title:this.state.tasks[0].title,
                    value:this.state.tasks[0].value,
@@ -226,10 +206,11 @@ class ToDoTask extends React.Component<Props, IState> {
 export default ToDoTask
 
 const styles = StyleSheet.create({
-
+  btnYes:{width:50, backgroundColor:'green', justifyContent:'center', alignItems:'center',padding:5, borderRadius:5},
+  btnNo:{width:50,  backgroundColor:'red',justifyContent:'center', alignItems:'center',padding:5, borderRadius:5},
   titletext: {
     fontSize: 17,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: '#363940'
   },
   checkbox: {
@@ -284,7 +265,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   modal:{
     backgroundColor: '#F2F3F8',

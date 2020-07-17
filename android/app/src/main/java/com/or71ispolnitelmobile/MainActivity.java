@@ -1,4 +1,4 @@
-package com.Productivity planner;
+package com.productivity_planner;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Productivity planner";
+    return "productivity_planner";
   }
 }
