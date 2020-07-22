@@ -16,6 +16,8 @@ import Close from "../assets/icons/close.svg"
 import { createDndContext } from "react-native-easy-dnd";
 import { Animated } from 'react-native';
 import Icon from "../assets/icons/dots.svg"
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
 const { Provider, Droppable, Draggable } = createDndContext();
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -107,27 +109,30 @@ class MainTasks extends React.Component<Props, IState> {
   };
   isStarted() {
     return <Modal
-      onBackButtonPress={() => { this.setState({ hideQuetionModal: false }) }}
+    onBackdropPress={() => { this.setState({ hideQuetionModal: false }) }}
       isVisible={this.state.hideQuetionModal}>
-      <View style={styles.modal}>
+      <View style={global_styles.modal}>
         <TouchableOpacity
-          style={{ position: 'absolute', right: 10, top: 5, }}
+          style={{ position: 'absolute', right: calcWidth(0), top: calcHeight(0),
+           height:calcHeight(40),width:calcWidth(40), paddingTop:calcHeight(14),paddingLeft:calcWidth(20)}}
           onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
-          <View ><Close height={20} width={20} fill='#3F93D9' /></View>
+          <View ><Close height={calcHeight(14)} width={calcWidth(14)} fill='#8990A1' /></View>
         </TouchableOpacity>
-        <View >
-          <Text style={{ fontSize: 20 }}>Bы уверены? </Text>
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          <Text style={global_styles.h1}>Bы уверены? </Text>
+          <Text style={global_styles.textComm}>Сохранить изменения</Text>
         </View>
-        <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection: 'row' }}>
+        <View style={{ width:'100%', marginTop: calcHeight(25), justifyContent: 'space-between', flexDirection: 'row',paddingHorizontal:calcWidth(65)}}>
+        <TouchableOpacity
+            onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
+            <View style={global_styles.btnNo}><Text style={{ fontSize: calcFontSize(14), color: 'white' }}>Нет</Text></View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {  this.onNavigateToDoTask() }}  >
-            <View style={styles.btnYes} >
-              <Text style={{ fontSize: 16, color: 'white' }}>Да</Text></View>
+            <View style={global_styles.btnYes} >
+              <Text style={{ fontSize: calcFontSize(14), color: 'white' }}>Да</Text></View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
-            <View style={styles.btnNo}><Text style={{ fontSize: 16, color: 'white' }}>Нет</Text></View>
-          </TouchableOpacity>
+         
         </View>
       </View>
     </Modal>
@@ -166,6 +171,7 @@ class MainTasks extends React.Component<Props, IState> {
    
    
   this.setState({ todaytasks: temp })
+  storeData(this.state.time, temp)
 }  else{
   let element = this.state.todaytasks
   for (let index = 0; index < element.length; index++) {
@@ -209,30 +215,53 @@ class MainTasks extends React.Component<Props, IState> {
   render() {
     return (
       < Provider>
-        <ScrollView style={{ backgroundColor: 'white', }}>
-          <View style={styles.screen}>
+        <ScrollView style={{ backgroundColor: 'white',}}>
+          {/* <View style={[styles.screen,{zIndex:1 }]}> */}
             <Header text={this.state.time == moment()
               .utcOffset('+05:30')
               .format('YYYY-MM-DD') ? 'Сегодня ' : 'Завтра'} onPress={() => { this.onNavigateMenu() }} add={this.state.todaytasks.length < 5} onNavigate={() => { this.onNavigateMenu() }} />
             <View style={{ width: '100%' }}>
-              <View style={{ backgroundColor: "#F2F3F8", paddingBottom: 5 }}>
+              <View style={{ backgroundColor: "#F7F7F8",}}>
                 {this.state.todaytasks.map((data, index) => {
                   const {  value, title, isDrag } = data
                   return (
-                    <View  >
-                      {index == 0 ? <View style={[{ marginTop: 7,zIndex:1, }, styles.card]}>
-                        <Text style={styles.titletext}>Основные задачи</Text>
-                        <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
+                    <View style={{
+                      
+                    paddingBottom:index==0 ||index==2 ||index==4?calcHeight(20):calcHeight(0),
+                    //marginBottom:this.state.todaytasks.length>index && index==0 ||index==2 ?calcHeight(6):calcHeight(0),
+                   marginTop:calcHeight(6),
+                    }} >
+                       {index == 0 ? <View style={[{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#FFFFFF',}]}>
+                        <Text style={global_styles.h1}>Основные задачи</Text>
+                        <Text style={global_styles.textComm}>Ваши главные задачи на сегодня</Text>
                       </View> : null}
-                      {index == 1 ? <View style={[styles.card, { marginTop: 7 ,zIndex:1,}]}>
-                        <Text style={styles.titletext}>Второстепенные задач</Text>
-                        <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
+
+                      {index == 1 ? <View style={{
+                        zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'
+                      }}>
+                        <Text style={global_styles.h1}>Второстепенные задач</Text>
+                        <Text style={global_styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
                       </View> : null}
-                      {index == 3 ? <View style={[styles.card, { marginTop: 7 ,zIndex:1, }]}>
-                        <Text style={styles.titletext}>Дополнительно</Text>
-                        <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
+                      {index == 3 ? <View style={{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'}}>
+                        <Text style={global_styles.h1}>Дополнительно</Text>
+                        <Text style={global_styles.textComm}>Не откладывайте в долгий ящик</Text>
                       </View> : null}
-                      {isDrag ? <Draggable
+                     {isDrag ? 
+                     <View
+                     style={{
+                     backgroundColor:'#F7F7F8',
+                      shadowColor: "#EAEAF2",
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowOpacity: 0.29,
+                      shadowRadius: 3.65,
+                      
+                      elevation: 5,
+                      height: calcHeight(43) ,
+                     }}
+                     ><Draggable
                         onDragStart={() => {
                           this.changeDragIndex(index)
                           this.setState({ activDragIndex: index })
@@ -249,31 +278,28 @@ class MainTasks extends React.Component<Props, IState> {
                           return (
                             <Animated.View
                               {...viewProps}
-                              style={[viewProps.style, { width: '100%', backgroundColor: "white", height: 43 ,zIndex:100000}]}
+                              style={[viewProps.style, { width: '100%',
+                               backgroundColor: "white",
+                               
+                                zIndex:9999,}]}
                             >
                               <View style={{ flexDirection: 'row' }}>
                                 <TouchableOpacity
-                                  style={{ width: "85%", }}
+                                  style={{ width: "80%", }}
                                   onPress={() => { this.props.navigation.navigate('EditTask', { comment: value, title: title, index: index, day: this.state.time }) }}
                                 >
-                                  <View style={{
-                                    flexDirection: 'row', alignItems: 'center', backgroundColor: 'white',
-                                    width: "100%",
-                                    paddingBottom: 5,
-                                    paddingHorizontal: 23,
-                                    height: 43
-                                  }}>
-                                    <Text style={styles.textTask}>{index + 1}.{title} </Text>
+                                  <View style={styles.items}>
+                                    <Text style={styles.textTask} ellipsizeMode='tail' numberOfLines={1}>{index + 1}.{title} </Text>
                                   </View>
                                 </TouchableOpacity>
-                                <View style={{ width: '20%', paddingTop: 8, flexDirection: 'row' }}>
-                                  <Icon height={30} width={30} fill={'grey'} style={{ width: 5 }} />
+                                <View style={styles.dndIcon}>
+                                  <Icon height={calcHeight(18)} width={calcWidth(6)} fill={'#D2D2DC'}  />
                                 </View>
                               </View>
                             </Animated.View>
                           );
                         }}
-                      </Draggable> :
+                      </Draggable></View> :
                         <Droppable
                           onEnter={() => {
                             this.setState({ activDropIndex: index })
@@ -292,7 +318,7 @@ class MainTasks extends React.Component<Props, IState> {
                                 {...viewProps}
                                 style={[
                                   {
-                                    width: '100%',
+                                   
                                      zIndex:10000, 
                                     backgroundColor:this.state.activDropIndex==index? '#e6e6e6':"white",
                                    
@@ -302,17 +328,17 @@ class MainTasks extends React.Component<Props, IState> {
                               >
                                 <View>
                                   <TouchableOpacity
-                                    style={{ width: "50%", height: 43,backgroundColor:this.state.activDropIndex==index? '#e6e6e6':"white"}}
+                                    style={{ width: "80%", height: calcHeight(43),backgroundColor:this.state.activDropIndex==index? '#e6e6e6':"white"}}
                                     onPress={() => { this.props.navigation.navigate('EditTask', { comment: value, title: title, index: index, day: this.state.time }) }}
                                   >
                                     <View style={{
                                       flexDirection: 'row', alignItems: 'center', backgroundColor: this.state.activDropIndex==index? '#e6e6e6':"white",
                                       width: "100%",
-                                      paddingBottom: 5,
-                                      paddingHorizontal: 23
+                                   //   paddingBottom: 5,
+                                      paddingHorizontal: calcHeight(23)
 
                                     }}>
-                                      <Text style={styles.textTask}>{index + 1}.{title} </Text>
+                                      <Text style={styles.textTask} ellipsizeMode='tail' numberOfLines={1}>{index + 1}.{title} </Text>
                                     </View>
                                   </TouchableOpacity>
                                 </View>
@@ -321,24 +347,25 @@ class MainTasks extends React.Component<Props, IState> {
                           }}
                         </Droppable>
                       }
+                      {/* {index==1 || index==3?<View style={global_styles.hr}/>:null} */}
                     </View>
                   )
-                })}
+                })} 
               </View>
               {this.state.hideQuetionModal ? this.isStarted() : null}
 
             </View>
-            <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
+            <View style={[global_styles.viewBtn,{zIndex:1}]}>
               {this.state.todaytasks.length
                 ? <Button
 
-                  style={styles.button}
+                  style={[global_styles.button,{zIndex:1}]}
                   onPress={() => { this.setState({ hideQuetionModal: true }) }}>
-                  <Text style={styles.buttonText}>Начать</Text>
+                  <Text style={global_styles.buttonText}>Начать</Text>
                 </Button> : <Text style={[styles.titletext,{ fontWeight: "600",}]}>Список пуст</Text>}
 
             </View>
-          </View>
+        
         </ScrollView>
       </Provider>
     );
@@ -347,10 +374,9 @@ class MainTasks extends React.Component<Props, IState> {
 
 export default MainTasks
 const styles = StyleSheet.create({
-  btnYes: { width: 50, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center', padding: 5, borderRadius: 5 },
-  btnNo: { width: 50, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center', padding: 5, borderRadius: 5 },
+ 
   titletext: {
-    fontSize: 17,
+    fontSize: calcFontSize(17),
     fontWeight: "bold",
     color: '#363940',
    // fontFamily:'SF Pro Display'
@@ -359,25 +385,26 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 20
   },
-  card: {
-    backgroundColor: 'white',
-    width: "100%",
-    paddingTop: 17,
+  dndIcon:{ width: '20%',  
+  flexDirection: 'row',
+  alignItems:'center', 
+  justifyContent:'center',
+  marginLeft:calcWidth(15) },
+ items:{
+  flexDirection: 'row',
+   alignItems: 'center', 
+   backgroundColor: 'white',
+  width: "100%",
 
-    //paddingBottom: 30,
-    //borderTopWidth: 1,
-    borderColor: '#e6e6e6',
-    // marginBottom: 5,
-    paddingHorizontal: 23
-  },
-  textComm: {
-    fontSize: 12,
-    fontWeight: 'normal',
-    color: '#9DA5B7'
-  },
+  paddingHorizontal: 23,
+  height: calcHeight(43),
+  
+},
   textTask: {
-    marginTop: 5,
-    fontSize: 14,
+    marginTop: calcFontSize(5),
+    fontSize: calcFontSize(14),
+    width:calcWidth(300),
+   
   },
   screen: {
     //alignItems: 'center',
@@ -386,37 +413,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
-  button: {
+  
+ 
 
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 280,
-    height: 55,
-    backgroundColor: '#3F93D9',
-    borderRadius: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.12,
-    shadowRadius: 1.65,
-
-    elevation: 7,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-
-  },
-  modal: {
-    backgroundColor: '#F2F3F8',
-    width: '100%',
-    height: 200,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
 });

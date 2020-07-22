@@ -15,6 +15,9 @@ import { NavigationScreenProp } from 'react-navigation';
 import Smile1 from "../assets/icons/bed_smile.svg"
 import Smile2 from "../assets/icons/normal_smile.svg"
 import Smile3 from "../assets/icons/happy_smile.svg"
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
+
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
@@ -34,17 +37,17 @@ const Emoji: IMarksList[] = [
   {
     title: 'Не доволен',
     Icon: Smile1,
-    selectedColor: 'red'
+    selectedColor: 'black'
   },
   {
     title: 'Нормально',
     Icon: Smile2,
-    selectedColor: 'orange'
+    selectedColor: 'black'
   },
   {
     title: 'Прекрасно',
     Icon: Smile3,
-    selectedColor: 'green'
+    selectedColor: 'black'
   }
 ]
 class DayReview extends React.Component<Props, IState> {
@@ -102,25 +105,25 @@ class DayReview extends React.Component<Props, IState> {
         <View style={styles.screen}>
           <Header text='Обзор дня ' onPress={() => { this.onNavigateMenu() }} add={false} onNavigate={() => { }} />
           <View style={{ width: '100%' }}>
-            <View style={[styles.card, { marginTop: 7 }]} >
+            <View style={[global_styles.card, { marginTop: 7 }]} >
               <Text style={styles.titletext}>Заметки</Text>
-              <Text style={styles.textComm}>К заполнению не обязательно</Text>
+              <Text style={global_styles.textComm}>К заполнению не обязательно</Text>
             </View>
           </View>
           <View style={styles.inputview}>
             <TextInput
               value={this.state.comment}
-              style={[styles.input, {}]}
+              style={[global_styles.textComm, {color:'#ADB1B5'}]}
               multiline={true}
               onChangeText={(r) => { this.setState({ comment: r }) }}
               placeholderTextColor={this.state.isWriteComm ? 'red' : '#ADB1B5'}
               placeholder={!this.state.isWriteComm ? 'Здесь вы можете оставить заметку' : 'Здесь вы должен оставить заметку'}
             />
           </View>
-          <View style={[styles.card, { marginTop: 7, }]} >
+          <View style={[global_styles.card, { marginTop: calcHeight(7), width:'100%'}]} >
             <Text style={[styles.titletext,]}>Оценить продуктивность</Text>
             {this.state.isChooseMarke ? <View>
-              <Text style={[styles.textComm, { color: 'red' }]}>Оценка обязательнօ</Text>
+              <Text style={[global_styles.textComm, { color: 'red' }]}>Оценка обязательнօ</Text>
             </View> : null}
             <View style={styles.viewMark}>
               {Emoji.map((data, index) => {
@@ -131,45 +134,23 @@ class DayReview extends React.Component<Props, IState> {
                       this.changeMark(index)
                     }}
                     style={{ alignItems: 'center' }}>
-                    <Icon height={27} width={31} fill={index == this.state.selectedEmoji ? selectedColor : "#9DA5B7"} />
-                    <Text style={styles.textComm}>{title}</Text>
+                    <Icon height={calcHeight(27)} width={calcWidth(31)} fill={index == this.state.selectedEmoji ? selectedColor : "#9DA5B7"} />
+                    <Text style={[global_styles.textComm, {marginTop:calcHeight(6), fontSize: calcFontSize(13),color:index == this.state.selectedEmoji ? selectedColor : "#9DA5B7"}]}>{title}</Text>
                   </TouchableOpacity>
                 )
               })}
-              {/* <TouchableOpacity
-                onPress={() => {
-                  this.changeMark(0, Mark.bed)
-                }}
-                style={{ alignItems: 'center' }}>
-
-                <Smile1 height={27} width={31} fill={!this.state.markList[0] ? "#9DA5B7" : 'red'} />
-                <Text style={styles.textComm}>Не доволен</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.changeMark(1, Mark.normal)
-                }}
-                style={{ alignItems: 'center' }}>
-               
-                <Text style={styles.textComm}>Нормально</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.changeMark(2, Mark.good)
-                }}
-                style={{ alignItems: 'center' }}>
-                <Smile3 height={27} width={31} fill={!this.state.markList[2] ? "#9DA5B7" : 'green'} />
-                <Text style={styles.textComm}>Прекрасно</Text>
-              </TouchableOpacity> */}
+              
             </View>
           </View>
-          <Button
+         <View style={{marginTop:calcHeight(60)}}>
+         <Button
             onPress={() => {
               this.finishedTask()
             }}
-            style={styles.button}>
-            <Text style={styles.buttonText}>Закончить</Text>
+            style={global_styles.button}>
+            <Text style={global_styles.buttonText}>Закончить</Text>
           </Button>
+         </View>
         </View>
       </ScrollView>
     );
@@ -180,7 +161,7 @@ export default DayReview;
 const styles = StyleSheet.create({
 
   titletext: {
-    fontSize: 17,
+    fontSize: calcFontSize(17),
     fontWeight: "bold",
     color: '#363940'
   },
@@ -191,21 +172,17 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     width: "100%",
-    paddingTop: 17,
-    paddingBottom: 30,
+    paddingTop: calcHeight(17),
+    paddingBottom: calcHeight(30),
 
     // borderColor: '#e6e6e6',
     // marginBottom: 5,
-    paddingHorizontal: 23
+    //paddingHorizontal: 23
   },
-  textComm: {
-    fontSize: 12,
-    fontWeight: 'normal',
-    color: '#9DA5B7'
-  },
+  
   textTask: {
-    marginTop: 5,
-    fontSize: 14,
+    marginTop: calcHeight(5),
+    fontSize: calcFontSize(14),
   },
   screen: {
     alignItems: 'center',
@@ -218,8 +195,8 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     alignItems: 'center',
-    width: 280,
-    height: 55,
+    width: calcWidth(280),
+    height: calcHeight(55),
     backgroundColor: '#3F93D9',
     borderRadius: 3,
     shadowColor: "#000",
@@ -234,7 +211,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: calcFontSize(16),
     fontWeight: '600',
   },
   input: {
@@ -245,17 +222,20 @@ const styles = StyleSheet.create({
   viewMark: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 24
+    marginTop: calcWidth(24),
+    marginRight:calcWidth(23)
   },
   inputview: {
     width: '90%',
-    alignItems: 'center',
-    height: 130,
+    //alignItems: 'center',
+    marginTop:calcHeight(20),
+    height: calcHeight(130),
     borderWidth: 1,
     borderRadius: 2,
     borderColor: 'rgba(0, 0, 0, 0.04)',
     backgroundColor: '#F7F8F9',
-    marginHorizontal: 17
+    marginHorizontal: calcWidth(17),
+    paddingLeft:calcWidth(17)
   },
   validedInputview: {
     width: '90%',

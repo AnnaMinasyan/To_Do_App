@@ -14,6 +14,8 @@ import ArrowL from "../assets/icons/arrow_left.svg";
 import Thick from "../assets/icons/plus_tick.svg"
 import Modal from 'react-native-modal';
 import Close from "../assets/icons/close.svg"
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
 interface Props {
     navigation: NavigationScreenProp<any, any>;
     title: string,
@@ -25,7 +27,9 @@ interface IState {
     comment: string,
     index: number,
     day: string,
-    isModalVisible: boolean
+    isModalVisible: boolean,
+    height:number,
+    height2:number
 }
 interface IRoute {
     key: string,
@@ -40,7 +44,9 @@ class EditTask extends React.Component<Props, IState> {
             comment: '',
             index: 0,
             day: '',
-            isModalVisible: false
+            isModalVisible: false,
+            height:calcHeight( this.props.route.params.title.length),
+            height2:calcHeight(this.props.route.params.comment.length),
         }
     }
     componentDidMount() {
@@ -69,26 +75,29 @@ class EditTask extends React.Component<Props, IState> {
     }
     openModal() {
         return <Modal
-            onBackButtonPress={() => { this.toggleModal(false) }}
+        onBackdropPress={() => { this.toggleModal(false) }}
             isVisible={this.state.isModalVisible}>
-            <View style={styles.modal}>
+            <View style={global_styles.modal}>
                 <TouchableOpacity
-                    style={{ position: 'absolute', right: 10, top: 5, }}
+                      style={{  position: 'absolute', right: calcWidth(0), top: calcHeight(0),
+                      height:calcHeight(40),width:calcWidth(40), paddingTop:calcHeight(14),paddingLeft:calcWidth(20) }}
                     onPress={() => { this.toggleModal(false) }}  >
-                    <View ><Close height={20} width={20} fill='#3F93D9' /></View>
+                    <View ><Close height={calcHeight(14)} width={calcWidth(14)} fill='#8990A1'  /></View>
                 </TouchableOpacity>
-                <View >
-                    <Text style={{ fontSize: 20 }}>Bы уверены?</Text>
-                </View>
-                <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection: 'row' }}>
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                <Text style={global_styles.h1}>Bы уверены?</Text>
+                <Text style={global_styles.textComm}>Сохранить изменения</Text>
+            </View>
+                <View style={{ width:'100%', marginTop: calcHeight(25), justifyContent: 'space-between', flexDirection: 'row',paddingHorizontal:calcWidth(40)}}>
+                <TouchableOpacity
+                        onPress={() => { this.toggleModal(false) }}  >
+                        <View style={global_styles.btnNo}><Text style={{ fontSize: 16, color: 'white' }}>Нет</Text></View>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {  this.deleteTask() }}  >
-                        <View style={styles.btnYes}><Text style={{ fontSize: 16, color: 'white' }}>Да</Text></View>
+                        <View style={global_styles.btnYes}><Text style={{ fontSize: 16, color: 'white' }}>Да</Text></View>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => { this.toggleModal(false) }}  >
-                        <View style={styles.btnNo}><Text style={{ fontSize: 16, color: 'white' }}>Нет</Text></View>
-                    </TouchableOpacity>
+                  
                 </View>
             </View>
         </Modal>
@@ -109,12 +118,12 @@ class EditTask extends React.Component<Props, IState> {
     render() {
         return (
             <ScrollView style={{ backgroundColor: 'white' }}>
-                <View style={styles.screen}>
-                    <View style={{ backgroundColor: '#3F93D9', height: 61, width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 23 }}>
+                <View style={[styles.screen]}>
+                    <View style={styles.header}>
                         <TouchableOpacity
                             onPress={() => { this.props.navigation.goBack() }}>
                             <View style={{ flexDirection: 'row',justifyContent:'center', alignItems:'center'}}>
-                                <ArrowL />
+                                <ArrowL height={calcHeight(15.31)} width={calcWidth(14)}  />
                                 <Text style={styles.title}>Отменить</Text>
                             </View>
                         </TouchableOpacity>
@@ -123,36 +132,42 @@ class EditTask extends React.Component<Props, IState> {
                             <View
                                 style={{ flexDirection: 'row' }}>
                                 <Text style={styles.title}>Сохранить</Text>
-                                <Thick />
+                                <Thick height={calcHeight(24)} width={calcWidth(24)} />
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ width: '100%', backgroundColor: '#F2F3F8', paddingBottom: 6 }}>
-                        <View style={[styles.card, { marginTop: 7, paddingTop: 22 }]} >
-                            <Text style={styles.titletext}>Название</Text>
+                    <View style={[{ width: '100%', backgroundColor: '#F2F3F8', paddingBottom: calcHeight(6) },]}>
+                        <View style={[styles.card, { marginTop: calcHeight(7), paddingTop: calcHeight(22), paddingBottom: calcHeight(27),}]} >
+                            <Text style={global_styles.h1}>Название</Text>
                             <View style={styles.inputLabel}>
                                 <TextInput
-                                    style={[styles.input, {}]}
+                                onContentSizeChange={(event) => {
+                                    this.setState({ height2: event.nativeEvent.contentSize.height })
+                                }}
                                     multiline={true}
                                     numberOfLines={2}
                                     value={this.state.title}
                                     onChangeText={(r) => { this.setState({ title: r }) }}
                                     placeholderTextColor={'#ADB1B5'}
                                     placeholder={'Введите название'}
+                                    style={{fontSize:calcFontSize(13),paddingBottom:calcHeight(6),}}
                                 />
                             </View>
                         </View>
-                        <View style={styles.card} >
-                            <Text style={styles.titletext}>Описание</Text>
-                            <View style={{ width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', }}>
+                        <View style={[styles.card,{paddingBottom: calcHeight(38),}]} >
+                            <Text style={global_styles.h1}>Описание</Text>
+                            <View style={{ width: '100%',  borderBottomWidth: 1, borderColor: '#ABB3BA', }}>
                                 <TextInput
-                                    style={styles.input}
                                     multiline={true}
                                     numberOfLines={2}
+                                    onContentSizeChange={(event) => {
+                                        this.setState({ height: event.nativeEvent.contentSize.height })
+                                    }}
                                     value={this.state.comment}
                                     onChangeText={(r) => { this.setState({ comment: r }) }}
                                     placeholderTextColor={'#ADB1B5'}
                                     placeholder={'Напишите что-то'}
+                                    style={{fontSize:calcFontSize(13),paddingBottom:calcHeight(6)}}
                                 />
                             </View>
                         </View>
@@ -175,11 +190,11 @@ class EditTask extends React.Component<Props, IState> {
                         </TouchableOpacity>
                     </View>
                 </View> */}
-                    <View style={{ width: '100%', alignItems: 'center', marginTop: 38 }}>
+                    <View style={{ width: '100%', alignItems: 'center', marginTop: calcHeight(38), marginBottom:calcHeight(38) }}>
                         <Button
                             onPress={() => { this.setState({ isModalVisible: true }) }}
-                            style={styles.button} >
-                            <Text style={styles.buttonText}>Удалить задачу</Text>
+                            style={[global_styles.button,{backgroundColor:'#F56060'}]} >
+                            <Text style={global_styles.buttonText}>Удалить задачу</Text>
                         </Button>
                     </View>
                 </View>
@@ -190,25 +205,28 @@ class EditTask extends React.Component<Props, IState> {
 
 export default EditTask
 const styles = StyleSheet.create({
-    inputLabel: { width: '100%', height: 40, borderBottomWidth: 1, borderColor: '#ABB3BA', backgroundColor: 'white' },
-    btnYes: { width: 50, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center', padding: 5, borderRadius: 5 },
-    btnNo: { width: 50, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center', padding: 5, borderRadius: 5 },
+    inputLabel: { width: '100%', 
+    
+     borderBottomWidth: 1,
+      borderColor: '#ABB3BA',
+       backgroundColor: 'white' },
+    
     title: {
-        fontSize: 16,
+        fontSize: calcFontSize(16),
         color: 'white',
         fontWeight: '600',
-        marginHorizontal: 10
+        marginHorizontal:calcWidth(10)
     },
     text: {
-        fontSize: 14,
+        fontSize: calcFontSize(14),
         fontWeight: '500',
         color: '#FFFFFF',
-        marginLeft: 12
+        marginLeft: calcWidth(12)
     },
     selectbtn: {
         justifyContent: 'center',
         width: '100%',
-        height: 51,
+        height:calcHeight(51),
         backgroundColor: '#3F93D9',
         borderRadius: 3,
         shadowColor: "#000",
@@ -224,11 +242,11 @@ const styles = StyleSheet.create({
     select: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 20,
+        marginHorizontal: calcWidth(20),
         alignItems: 'center'
     },
     titletext: {
-        fontSize: 17,
+        fontSize: calcFontSize(17),
         fontWeight: "bold",
         color: '#363940'
     },
@@ -239,18 +257,18 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: 'white',
         width: "100%",
-        paddingBottom: 22,        // borderColor: '#e6e6e6',
+                // borderColor: '#e6e6e6',
         // marginBottom: 5,
-        paddingHorizontal: 23
+        paddingHorizontal: calcWidth(23)
     },
     textComm: {
-        fontSize: 12,
+        fontSize: calcFontSize(12),
         fontWeight: 'normal',
         color: '#9DA5B7'
     },
     textTask: {
-        marginTop: 5,
-        fontSize: 14,
+        marginTop: calcHeight(5),
+        fontSize: calcFontSize(14),
     },
     screen: {
         alignItems: 'center',
@@ -279,30 +297,26 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: calcFontSize(16),
         fontWeight: '600',
     },
-    input: {
-        // paddingHorizontal: 17,
-
-        // backgroundColor:'#F7F8F9',
-        // alignItems: 'baseline',
-        //  justifyContent: 'flex-start',
-        //   width:'90%',
-        //   height:130,
-        //   borderWidth:1,
-        //   borderRadius:2,
-        //   borderColor:'rgba(0, 0, 0, 0.04)'
-
-    },
+    
     modal: {
         backgroundColor: '#F2F3F8',
         width: '100%',
-        height: 200,
+        height: calcHeight(200),
         paddingHorizontal: 20,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    viewMark: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 }
+    viewMark: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 24 },
+    header: { 
+        backgroundColor: '#3F93D9',
+     height: calcHeight(61), 
+     width: '100%', 
+     alignItems: 'center', 
+     flexDirection: 'row', 
+     justifyContent: 'space-between',
+      paddingHorizontal: calcWidth(23) }
 });

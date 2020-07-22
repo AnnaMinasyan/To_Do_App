@@ -4,7 +4,8 @@ import { Button, Thumbnail } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { storeData, getData } from "../api/api"
 import Modal from 'react-native-modal';
-
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
 import Logo from '../assets/icons/logo.svg';
 import Header from "../components/Header"
 import { NavigationScreenProp } from 'react-navigation';
@@ -75,25 +76,29 @@ class ToDoTask extends React.Component<Props, IState> {
     return <Modal
         onBackButtonPress={() => { this.setState({hideQuetionModal:false}) }}
         isVisible={this.state.hideQuetionModal}>
-        <View style={styles.modal}>
+        <View style={global_styles.modal}>
             <TouchableOpacity
-                style={{ position: 'absolute', right: 10, top: 5, }}
+              style={{  position: 'absolute', right: calcWidth(0), top: calcHeight(0),
+              height:calcHeight(40),width:calcWidth(40), paddingTop:calcHeight(14),paddingLeft:calcWidth(20)
+              }}
                 onPress={() => { this.setState({hideQuetionModal:false})}}  >
-                <View ><Close height={25} width={25} fill='#3F93D9' /></View>
+                <View ><Close height={calcHeight(14)} width={calcWidth(14)} fill='#8990A1'  /></View>
             </TouchableOpacity>
-            <View >
-                <Text style={{fontSize:20}}>Bы уверены?</Text>
+            <View style={{justifyContent:'center',alignItems:'center'}}>
+                <Text style={global_styles.h1}>Bы уверены?</Text>
+                <Text style={global_styles.textComm}>Сохранить изменения</Text>
             </View>
-            <View style={{ width: '60%', marginTop: 50, justifyContent: 'space-between', flexDirection: 'row' }}>
+            <View style={{ width:'100%', marginTop: calcHeight(25), justifyContent: 'space-between', flexDirection: 'row',paddingHorizontal:calcWidth(65)}}>
+            <TouchableOpacity
+            onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
+            <View style={global_styles.btnNo}><Text style={{ fontSize: 16, color:'white'}}>Нет</Text></View>
+          </TouchableOpacity>
           <TouchableOpacity
              onPress={() => { this.setState({hideQuetionModal:false}),this.props.navigation.navigate('DayReview') }}  >
-            <View style={styles.btnYes} >
+            <View style={global_styles.btnYes} >
               <Text style={{ fontSize: 16,color:'white'}}>Да</Text></View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => { this.setState({ hideQuetionModal: false }) }}  >
-            <View style={styles.btnNo}><Text style={{ fontSize: 16, color:'white'}}>Нет</Text></View>
-          </TouchableOpacity>
+         
         </View>
         </View>
     </Modal>
@@ -133,10 +138,14 @@ class ToDoTask extends React.Component<Props, IState> {
             .format('YYYY-MM-DD') ? 'Сегодня ' : 'Завтра'} onPress={() => { }} add={false} onNavigate={() => { }} />
           <View style={{ width: '100%' }}>
             <View style={{ backgroundColor: "#F2F3F8", }}>
-              {this.state.tasks && this.state.tasks[0] ? <View style={[styles.card, { marginTop: 7 }]}  >
-                <Text style={styles.titletext}>Основные задачи</Text>
-                <Text style={styles.textComm}>Ваши главные задачи на сегодня</Text>
-                <ToDo valueChanged={this.handleToDoValueChange} 
+              {this.state.tasks && this.state.tasks[0] ? 
+              <View style={[global_styles.shodow,styles.items,{marginBottom:calcHeight(0)}]}>
+              <View style={[global_styles.card, ]}  >
+                <Text style={global_styles.h1}>Основные задачи</Text>
+                <Text style={global_styles.textComm}>Ваши главные задачи на сегодня</Text>
+                </View>
+               <View style={[{paddingHorizontal:calcWidth(22)}]}>
+               <ToDo valueChanged={this.handleToDoValueChange} 
                  data={{
                    title:this.state.tasks[0].title,
                    value:this.state.tasks[0].value,
@@ -144,11 +153,18 @@ class ToDoTask extends React.Component<Props, IState> {
                   cancheck:this.state.cancheck,
                   num:1
                   }} />
+               </View>
 
               </View> : null}
-              {this.state.tasks && this.state.tasks[1] ? <View style={styles.card} >
-                <Text style={styles.titletext}>Второстепенные задач</Text>
-                <Text style={styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
+              {this.state.tasks && this.state.tasks[1] ? 
+                          <View style={[global_styles.shodow,styles.items]}>
+
+              <View style={global_styles.card} >
+                <Text style={global_styles.h1}>Второстепенные задач</Text>
+                <Text style={global_styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
+                </View>
+                <View style={{paddingHorizontal:calcWidth(22)}}>
+
                 <ToDo valueChanged={this.handleToDoValueChange} data={{
                    title:this.state.tasks[1].title,
                    value:this.state.tasks[1].value,
@@ -156,18 +172,27 @@ class ToDoTask extends React.Component<Props, IState> {
                   cancheck:this.state.cancheck,
                   num:2
                   }} />
+                 
                 {this.state.tasks && this.state.tasks[2] ?
+                 <View  style={{borderTopColor:'#F3F5F8',borderTopWidth:1, marginTop:calcHeight(10), width:calcWidth(315)}}>
                   <ToDo valueChanged={this.handleToDoValueChange} data={{
                     title:this.state.tasks[2].title,
                     value:this.state.tasks[2].value,
                    count:this.state.tasks[2].count,
                    cancheck:this.state.cancheck,
                    num:3
-                   }}/> : null}
+                   }}/></View> : null}
+                   </View>
               </View> : null}
-              {this.state.tasks && this.state.tasks[3] ? <View style={styles.card} >
-                <Text style={styles.titletext}>Дополнительно</Text>
-                <Text style={styles.textComm}>Не откладывайте в долгий ящик</Text>
+              {this.state.tasks && this.state.tasks[3] ? 
+                            <View style={[global_styles.shodow,styles.items]}>
+
+              <View style={global_styles.card} >
+                <Text style={global_styles.h1}>Дополнительно</Text>
+                <Text style={global_styles.textComm}>Не откладывайте в долгий ящик</Text>
+                </View>
+                <View style={{paddingHorizontal:calcWidth(22)}}>
+
                 <ToDo valueChanged={this.handleToDoValueChange} data={{
                    title:this.state.tasks[3].title,
                    value:this.state.tasks[3].value,
@@ -176,26 +201,28 @@ class ToDoTask extends React.Component<Props, IState> {
                   num:4
                   }} />
                 {this.state.tasks && this.state.tasks[4] ?
+                 <View  style={{borderTopColor:'#F3F5F8',borderTopWidth:1, marginTop:calcHeight(10), width:calcWidth(315)}}>
                   <ToDo valueChanged={this.handleToDoValueChange} data={{
                     title:this.state.tasks[4].title,
                     value:this.state.tasks[4].value,
                    count:this.state.tasks[4].count,
                    cancheck:this.state.cancheck,
                    num:5
-                   }}/> : null}
+                   }}/></View> : null}
+                   </View>
               </View> : null}
             </View>
             {this.state.isModalVisible ? this.ckeckisfinished() : null}
           </View>
-          <View style={{ justifyContent: 'center', width: '100%', alignItems: 'center', marginTop: 48 }}>
+          <View style={global_styles.viewBtn}>
             <Button
-              style={styles.button}
+              style={this.state.isFinished?global_styles.button:[global_styles.button,{backgroundColor:'#7db0db'}]}
               disabled={!this.state.isFinished}
               onPress={() => {
                 this.setState({hideQuetionModal:true})
               }}
             >
-              <Text style={styles.buttonText}>Закончить</Text>
+              <Text style={global_styles.buttonText}>Закончить</Text>
             </Button>
           </View>
         </View>
@@ -209,7 +236,7 @@ const styles = StyleSheet.create({
   btnYes:{width:50, backgroundColor:'green', justifyContent:'center', alignItems:'center',padding:5, borderRadius:5},
   btnNo:{width:50,  backgroundColor:'red',justifyContent:'center', alignItems:'center',padding:5, borderRadius:5},
   titletext: {
-    fontSize: 17,
+    fontSize: calcFontSize(17),
     fontWeight: "bold",
     color: '#363940'
   },
@@ -220,21 +247,21 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     width: "100%",
-    paddingTop: 17,
-    paddingBottom: 30,
+    paddingTop: calcHeight(17),
+    paddingBottom: calcHeight(27),
     borderBottomWidth: 1,
     borderColor: '#e6e6e6',
     marginBottom: 5,
     paddingHorizontal: 23
   },
   textComm: {
-    fontSize: 12,
+    fontSize: calcFontSize(12),
     fontWeight: 'normal',
     color: '#9DA5B7'
   },
   textTask: {
     marginTop: 5,
-    fontSize: 14,
+    fontSize:calcFontSize(14),
   },
   screen: {
     //alignItems: 'center',
@@ -243,6 +270,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
   },
+  items:{backgroundColor:'white', paddingBottom:calcHeight(29),marginVertical:calcHeight(6),marginBottom:calcHeight(6),marginTop:calcHeight(6)},
   button: {
 
     justifyContent: 'center',
@@ -263,7 +291,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: calcFontSize(16),
     fontWeight: '600',
   },
   modal:{

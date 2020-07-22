@@ -6,7 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 
 import MenuSvg from '../assets/icons/menu_icon.svg';
 import Filter from '../assets/icons/filter-icon.svg';
-
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
 interface Props {
 }
 
@@ -17,6 +18,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
     height: 56,
+   
   },
   button: {
     justifyContent: 'center',
@@ -37,37 +39,17 @@ const BaseHeader: React.FunctionComponent<Props> = (props) => {
   const navigation = useNavigation();
 
   return (
-    // <View style={styles.headerContainer}>
-    //   <TouchableOpacity
-    //     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-    //     <Hamburger width={24} height={15} />
-    //   </TouchableOpacity>
-    //   {props.title}
-    //   <TouchableOpacity
-    //     onPress={() =>
-    //       navigation
-    //         .dangerouslyGetParent()
-    //         ?.dangerouslyGetParent()
-    //         ?.dispatch(DrawerActions.toggleDrawer())
-    //     }>
-    //     <Filter width={22} height={24} />
-    //   </TouchableOpacity>
-    // </View>
-    
+  
     <View style={styles.headerContainer}
-    // style={{
-    //   backgroundColor: '#3F93D9',
-    //   height: 70, width: '100%', flexDirection: 'row', justifyContent:'space-between', paddingHorizontal:20,
-    //   position:'relative'
-    // }}
+   
     >
-      <View style={{flexDirection:'row'}}>
+      <View style={{flexDirection:'row',}}>
         <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        style={{marginTop:17,}}
+        style={{marginTop:calcHeight(0), height:calcHeight(60),width:calcWidth(70),justifyContent:'center'}}
         >
-         
-          <MenuSvg height={20}/>
+        
+          <MenuSvg height={calcHeight(12)} width={calcWidth(17.28)}/>
           </TouchableOpacity>
 
        

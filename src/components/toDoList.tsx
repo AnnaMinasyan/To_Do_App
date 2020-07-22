@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,ScrollView } from 'react-native';
 import Check from "../assets/icons/checked-radio.svg"
 import {storeData,getData} from "../api/api"
 import Modal from 'react-native-modal';
 import Close from "../assets/icons/close.svg"
+import global_styles from "../assets/styles/global_styles"
+import {calcFontSize,calcHeight,calcWidth} from "../assets/styles/dimensions" 
 interface Props {
     data:IData
 
@@ -48,30 +50,32 @@ interface DataTypeItem {
     openInfoModal(){
        
         return <Modal
-        onBackButtonPress={()=>{this.toggleModal(6)}}
+        onBackdropPress={()=>{this.toggleModal(6)}}
          isVisible={this.state.isModalVisible>5?false:true}>
-             <View style={{ 
+          
+            <View style={{ 
                backgroundColor:'#F2F3F8',
-             width:'100%',
-             height:600,
-            paddingHorizontal:20,
+             width:calcWidth(311),
+            height:calcHeight(316),
+            paddingHorizontal:calcWidth(20),
+            
             borderRadius:5
              }}>
-           <TouchableOpacity  
-           style={{position:'absolute',right:5,top:5, }}
-           onPress={()=>{this.toggleModal(6)}}  >
-               <View style={styles.closed}><Close height={25} width={25} fill='#cccccc'/></View>
-               </TouchableOpacity>
-    
-           <View style={{marginTop:30}}>
-           <Text style={styles.titletext}>{this.props.data.title}</Text>
+      <ScrollView
+    showsVerticalScrollIndicator={false}
+       >
+           <View style={{marginTop:calcHeight(20)}}>
+           <Text style={global_styles.textComm}>Название</Text>
+           <Text style={global_styles.h1}>{this.props.data.title}</Text>
           
            </View>
-    <View style={{marginTop:10, justifyContent:'center', alignItems:"center"}}>
-    <Text style={styles.textComm}>{this.props.data.value}</Text> 
+    <View style={{marginTop:calcHeight(28), }}>
+    <Text style={global_styles.textComm}>Описание</Text>
+    <Text style={[global_styles.textComm,{color:'#363940',paddingBottom:calcHeight(20),}]}>{this.props.data.value}</Text> 
     </View>
-      
+    </ScrollView>
       </View>
+         
         </Modal>
       }
       render(){
@@ -82,27 +86,27 @@ interface DataTypeItem {
             <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
                 
                 <TouchableOpacity
+               
                 disabled={!this.props.data.cancheck}
                 onPress={() => {
                     console.log(this.props.data.count);
-                
                   this.change({value:this.props.data.title,count:this.state.status})
                
                 }} 
                 >
                     {!this.state.status ?
-                        <View style={styles.unchecked}>
+                        <View style={[this.props.data.cancheck?styles.unchecked:[styles.unchecked,{backgroundColor:'#F7F8F9',borderColor:'#9DA5B7'}]]}>
                           
                             </View> :
                         <View style={styles.checked}>
-                            <Check height={10}/></View>}
+                            <Check height={calcHeight(10)}/></View>}
                 </TouchableOpacity>
                 <TouchableOpacity
-                style={{width:'100%', height:20}}
+                style={{width:'100%', height:calcHeight(20)}}
                 onPress={()=>{
                 this.toggleModal(this.props.data.num-1)}}
                 >
-                <Text style={[styles.textTask,{textDecorationLine:this.state.status?'line-through':'none',}]}>{this.props.data.num}. {this.props.data.title}</Text>
+                <Text style={[styles.textTask,{textDecorationLine:this.state.status?'line-through':'none',}]} ellipsizeMode='tail' numberOfLines={1}>{this.props.data.num}. {this.props.data.title}</Text>
                 </TouchableOpacity>
                 {this.state.isModalVisible>5?null:this.openInfoModal()}
             </View>
@@ -116,42 +120,44 @@ export default ToDo;
 const styles = StyleSheet.create({
     closed:{height:60, width:60, justifyContent:'center', alignItems:'center'},
     textTask: {
-        fontSize: 14,
-        color:'#50545D'
+        fontSize: calcFontSize(14),
+        color:'#50545D',
+        width:calcWidth(280)
     },
     unchecked:{
-        height:22,
-         width:22,
-         borderWidth:1,
+        height:calcHeight(22),
+            width:calcWidth(18),
+            borderWidth:calcHeight(1),
          borderColor:'#62646D',
-         borderRadius:20,
-         marginRight:14,
+         borderRadius:calcHeight(20),
+         marginRight:calcWidth(14),
          
         },
+        
         checked:{
-            height:22,
-            width:22,
-            borderWidth:1,
+            height:calcHeight(22),
+            width:calcWidth(18),
+            borderWidth:calcWidth(1),
             borderColor:'#3F93D9',
-            borderRadius:20,
-            marginRight:14,
+            borderRadius:calcHeight(20),
+            marginRight:calcWidth(14),
             backgroundColor:'#3F93D9',
             justifyContent:'center',
             alignItems:'center',
-            shadowOffset: {
-                width: 0,
-                height: 4,
-            },
-            shadowOpacity: 0.18,
-            shadowRadius: 8,
-            shadowColor:'rgba(70, 93, 239, 0.18)',
-            elevation: 14,
+            // shadowOffset: {
+            //     width: 0,
+            //     height: calcHeight(4),
+            // },
+            // shadowOpacity: 0.18,
+            // shadowRadius: calcHeight(8),
+            // shadowColor:'rgba(70, 93, 239, 0.18)',
+            // elevation: 10,
         },
         titletext:{
-            fontSize:26
+            fontSize:calcFontSize(26)
         },
         textComm:{
-            fontSize:18,
+            fontSize:calcFontSize(18),
             color:'#8c8c8c'
         }
     },
