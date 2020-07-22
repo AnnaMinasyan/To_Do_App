@@ -126,17 +126,17 @@ const styles = StyleSheet.create({
     },
     unchecked:{
         height:calcHeight(22),
-            width:calcWidth(18),
+            width:calcHeight(22),
             borderWidth:calcHeight(1),
          borderColor:'#62646D',
          borderRadius:calcHeight(20),
-         marginRight:calcWidth(14),
+         marginRight:calcHeight(20),
          
         },
         
         checked:{
             height:calcHeight(22),
-            width:calcWidth(18),
+            width:calcHeight(22),
             borderWidth:calcWidth(1),
             borderColor:'#3F93D9',
             borderRadius:calcHeight(20),

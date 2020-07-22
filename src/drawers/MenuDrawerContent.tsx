@@ -134,9 +134,9 @@ shodow:{
     marginLeft: calcWidth(12)
   },
   button: {
-    height: calcHeight(25),
-    width: calcWidth(20),
-    borderRadius: calcWidth(20),
+    height: calcHeight(20),
+    width:calcHeight(20),
+    borderRadius:calcHeight(20),
 
     justifyContent: 'center',
     alignItems: 'center', 

@@ -215,7 +215,7 @@ class MainTasks extends React.Component<Props, IState> {
   render() {
     return (
       < Provider>
-        <ScrollView style={{ backgroundColor: 'white',}}>
+        <ScrollView style={{ backgroundColor: '#F7F7F8',}}>
           {/* <View style={[styles.screen,{zIndex:1 }]}> */}
             <Header text={this.state.time == moment()
               .utcOffset('+05:30')
@@ -231,18 +231,18 @@ class MainTasks extends React.Component<Props, IState> {
                     //marginBottom:this.state.todaytasks.length>index && index==0 ||index==2 ?calcHeight(6):calcHeight(0),
                    marginTop:calcHeight(6),
                     }} >
-                       {index == 0 ? <View style={[{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#FFFFFF',}]}>
+                       {index == 0 ? <View style={[{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(23), paddingTop:calcHeight(16),backgroundColor:'#FFFFFF',}]}>
                         <Text style={global_styles.h1}>Основные задачи</Text>
                         <Text style={global_styles.textComm}>Ваши главные задачи на сегодня</Text>
                       </View> : null}
 
                       {index == 1 ? <View style={{
-                        zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'
+                        zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(23), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'
                       }}>
                         <Text style={global_styles.h1}>Второстепенные задач</Text>
                         <Text style={global_styles.textComm}>Выполнили все основые? Не забудьте про эти!</Text>
                       </View> : null}
-                      {index == 3 ? <View style={{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(27), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'}}>
+                      {index == 3 ? <View style={{zIndex:1,height:calcHeight(79),paddingLeft:calcWidth(23), paddingTop:calcHeight(16),backgroundColor:'#F7F7F8'}}>
                         <Text style={global_styles.h1}>Дополнительно</Text>
                         <Text style={global_styles.textComm}>Не откладывайте в долгий ящик</Text>
                       </View> : null}
@@ -280,7 +280,7 @@ class MainTasks extends React.Component<Props, IState> {
                               {...viewProps}
                               style={[viewProps.style, { width: '100%',
                                backgroundColor: "white",
-                               
+                             
                                 zIndex:9999,}]}
                             >
                               <View style={{ flexDirection: 'row' }}>

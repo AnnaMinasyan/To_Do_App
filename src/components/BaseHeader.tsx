@@ -43,10 +43,10 @@ const BaseHeader: React.FunctionComponent<Props> = (props) => {
     <View style={styles.headerContainer}
    
     >
-      <View style={{flexDirection:'row',}}>
+      <View style={{flexDirection:'row',justifyContent:'center'}}>
         <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-        style={{marginTop:calcHeight(0), height:calcHeight(60),width:calcWidth(70),justifyContent:'center'}}
+        style={{width:calcWidth(70),justifyContent:'center',marginTop:calcHeight(10)}}
         >
         
           <MenuSvg height={calcHeight(12)} width={calcWidth(17.28)}/>
